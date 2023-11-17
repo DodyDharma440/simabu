@@ -16,7 +16,10 @@ if (process.env.NODE_ENV === "production") {
 }
 
 type NextApiHandler = Partial<
-  Record<HttpMethod, (req: NextApiRequest, res: NextApiResponse) => void>
+  Record<
+    HttpMethod,
+    (req: NextApiRequest, res: NextApiResponse) => Promise<void>
+  >
 >;
 
 export const makeHandler = (
@@ -25,10 +28,17 @@ export const makeHandler = (
   const handlers = methodsHandler(prisma);
   const availableMethods = Object.keys(handlers);
 
-  const handler = (req: NextApiRequest, res: NextApiResponse) => {
+  const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method) {
       if (availableMethods.includes(req.method)) {
-        return handlers[req.method as HttpMethod]?.(req, res);
+        try {
+          await handlers[req.method as HttpMethod]?.(req, res);
+          return;
+        } catch (error) {
+          console.log(error);
+          createErrResponse(res, error, 500);
+          return;
+        }
       } else {
         return createErrResponse(res, "Method not allowed", 405);
       }

@@ -1,5 +1,5 @@
-import { NextApiResponse } from "next";
-import { ApiResponse } from "../interfaces/api";
+import { NextApiRequest, NextApiResponse } from "next";
+import { PaginationResponse } from "../interfaces/api";
 
 export const createResponse = <T extends Object>(
   res: NextApiResponse,
@@ -25,4 +25,36 @@ export const createErrResponse = (
     message: "Error",
     error,
   });
+};
+
+export const paginationResponse = <T extends Object>(
+  data: T[],
+  count: number
+): PaginationResponse<T> => {
+  const hasNextPage = data.length < count;
+
+  return {
+    pageInfo: {
+      hasNextPage,
+    },
+    nodes: data,
+    totalCount: count,
+  };
+};
+
+export const parsePaginationParams = (req: NextApiRequest) => {
+  const { page, perPage } = req.query;
+
+  if (page && perPage) {
+    const props: { skip: number; take?: number } = {
+      skip: (Number(page) - 1) * Number(perPage),
+    };
+
+    if (perPage) {
+      props.take = Number(perPage);
+    }
+    return props;
+  }
+
+  return {};
 };
