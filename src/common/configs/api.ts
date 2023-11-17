@@ -1,6 +1,6 @@
 import axios from "axios";
 
 export const apiSimabu = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: `${process.env["NEXT_PUBLIC_API_BASE_URL"]}/api`,
   withCredentials: true,
 });
