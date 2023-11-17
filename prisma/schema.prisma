@@ -25,4 +25,64 @@ model User {
   updatedAt DateTime @default(now())
   role      Role     @relation(fields: [roleId], references: [id])
   roleId    Int
+  Petugas   Petugas?
+}
+
+model ProgramStudi {
+  id          Int         @id @default(autoincrement())
+  nama        String
+  namaSingkat String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @default(now())
+  Mahasiswa   Mahasiswa[]
+}
+
+model Petugas {
+  id        Int      @id @default(autoincrement())
+  nama      String
+  nip       String   @unique
+  alamat    String?
+  noTelp    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique
+}
+
+model Mahasiswa {
+  id             Int          @id @default(autoincrement())
+  nama           String
+  nim            String       @unique
+  alamat         String?
+  noTelp         String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @default(now())
+  programStudi   ProgramStudi @relation(fields: [programStudiId], references: [id])
+  programStudiId Int
+}
+
+model Kategori {
+  id        Int      @id @default(autoincrement())
+  nama      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  Buku      Buku[]
+}
+
+model Buku {
+  id            Int      @id @default(autoincrement())
+  judul         String
+  kodeBuku      String   @unique
+  imageUrl      String?
+  penerbit      String
+  tahunTerbit   Int
+  jumlahHalaman Int
+  penulis       String?
+  nomorRak      Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now())
+  createdBy     String?
+  updatedBy     String?
+  kategori      Kategori @relation(fields: [kategoriId], references: [id])
+  kategoriId    Int
 }

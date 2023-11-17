@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
-import jwt from "jsonwebtoken";
+import { SignJWT } from "jose";
 import Cookies from "cookies";
 import bcrypt from "bcrypt";
+import { createSecretKey } from "crypto";
 import { ILoginInput } from "@/auth/interfaces";
 import { createErrResponse, createResponse } from "@/common/utils/api-response";
 import { makeHandler } from "@/common/utils/api-route";
@@ -25,10 +26,13 @@ const handler = makeHandler((prisma) => ({
       return;
     }
 
-    const { password: pwd, ...restUser } = user;
-    const token = jwt.sign(restUser, process.env["JWT_SECRET"]!, {
-      expiresIn: "1d",
-    });
+    const { id } = user;
+
+    const token = await new SignJWT({ id })
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuedAt()
+      .setExpirationTime("1d")
+      .sign(createSecretKey(process.env["JWT_SECRET"]!, "utf-8"));
 
     const cookies = new Cookies(req, res);
     cookies.set(process.env["COOKIE_NAME"]!, token, {

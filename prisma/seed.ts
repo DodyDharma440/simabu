@@ -23,7 +23,17 @@ async function main() {
     },
   });
 
-  console.log({ roles, admin });
+  const petugasAdmin = await prisma.petugas.upsert({
+    where: { userId: 1 },
+    update: {},
+    create: {
+      nama: "Super Admin",
+      userId: 1,
+      nip: "12345678",
+    },
+  });
+
+  console.log({ roles, admin, petugasAdmin });
 }
 
 main()

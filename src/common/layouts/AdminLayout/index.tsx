@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { Box, useMantineTheme } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { Sidebar } from "..";
-import { adminMenus } from "@/common/constants";
+import { adminMenus } from "@/common/constants/layout";
 
 type AdminLayoutProps = {
   children: React.ReactNode;
