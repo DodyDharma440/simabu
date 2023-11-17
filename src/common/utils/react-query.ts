@@ -142,24 +142,24 @@ export const createSignal = (timeoutMs?: number) => {
 export const divideBasicData = <T extends Object & BasicData>(data: T) => {
   const {
     id,
-    created_at,
-    updated_at,
-    deleted_at,
-    created_by,
-    updated_by,
-    deleted_by,
+    createdAt,
+    updatedAt,
+    deletedAt,
+    createdBy,
+    updatedBy,
+    deletedBy,
     ...rest
   } = data;
 
   return {
     basicData: {
       id,
-      created_at,
-      updated_at,
-      deleted_at,
-      created_by,
-      updated_by,
-      deleted_by,
+      createdAt,
+      updatedAt,
+      deletedAt,
+      createdBy,
+      updatedBy,
+      deletedBy,
     },
     divided: rest as Omit<T, keyof BasicData>,
   };

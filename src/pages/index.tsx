@@ -1,5 +1,7 @@
 import React from "react";
 import Head from "next/head";
+import { Button } from "@mantine/core";
+import Link from "next/link";
 
 const Simabu = () => {
   return (
@@ -8,7 +10,9 @@ const Simabu = () => {
         <title>SIMABU</title>
       </Head>
 
-      <div>Hello</div>
+      <Link href="/login">
+        <Button>Login</Button>
+      </Link>
     </>
   );
 };

@@ -67,11 +67,10 @@ export const customTheme: MantineThemeOverride = {
       },
     },
   },
-  primaryColor: "green",
-  black: "#4D4D4D",
+  primaryColor: "orange",
   globalStyles: (theme) => ({
     "*": {
-      fontFamily: "'Figtree', sans-serif !important",
+      fontFamily: "'Inter', sans-serif !important",
     },
     html: {
       overflowX: "clip",

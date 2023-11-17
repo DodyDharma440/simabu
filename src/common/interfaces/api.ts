@@ -15,11 +15,11 @@ export interface PaginationResponse<T extends any> {
 }
 
 export type BasicData = {
-  id: string;
-  created_at: string | null;
-  updated_at: string | null;
-  deleted_at?: string | null;
-  created_by?: string | null;
-  updated_by?: string | null;
-  deleted_by?: string | null;
+  id: number;
+  createdAt: string | null;
+  updatedAt: string | null;
+  deletedAt?: string | null;
+  createdBy?: string | null;
+  updatedBy?: string | null;
+  deletedBy?: string | null;
 };
