@@ -7,12 +7,18 @@ const handler = makeHandler((prisma) => ({
     const userData = decodeToken(req);
 
     try {
-      const user = await prisma.user.findUnique({
+      const user = await prisma.petugas.findUnique({
         where: {
-          id: userData?.id,
+          userId: userData?.id,
         },
         include: {
-          role: true,
+          user: {
+            select: {
+              id: true,
+              username: true,
+              role: true,
+            },
+          },
         },
       });
 
@@ -21,15 +27,7 @@ const handler = makeHandler((prisma) => ({
         return;
       }
 
-      const petugas = await prisma.petugas.findUnique({
-        where: {
-          userId: user?.id,
-        },
-      });
-
-      const { password, ...restUser } = user;
-
-      createResponse(res, { ...restUser, petugas });
+      createResponse(res, user);
     } catch (error) {
       createErrResponse(res, error);
     }
