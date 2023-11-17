@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import jwt from "jsonwebtoken";
 import Cookies from "cookies";
 import bcrypt from "bcrypt";
-import { ILoginInput } from "@/modules/auth/interfaces";
+import { ILoginInput } from "@/auth/interfaces";
 import { createErrResponse, createResponse } from "@/common/utils/api-response";
 import { makeHandler } from "@/common/utils/api-route";
 

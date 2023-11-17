@@ -2,6 +2,7 @@ import { AppProps } from "next/app";
 import Head from "next/head";
 import { AppProvider, ThemeProvider } from "@/common/providers";
 import { customTheme } from "@/common/configs/theme";
+import { AdminLayout } from "@/common/layouts";
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
@@ -12,7 +13,9 @@ const App = ({ Component, pageProps }: AppProps) => {
 
       <ThemeProvider colorKey="akundes" theme={customTheme}>
         <AppProvider>
-          <Component {...pageProps} />
+          <AdminLayout>
+            <Component {...pageProps} />
+          </AdminLayout>
         </AppProvider>
       </ThemeProvider>
     </>

@@ -1,6 +1,6 @@
 import React from "react";
 import Head from "next/head";
-import { AuthContainer } from "@/modules/auth/components";
+import { AuthContainer } from "@/auth/components";
 import { GetServerSideProps } from "next";
 
 const Login = () => {
