@@ -6,19 +6,51 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prisma-generate": "cd node_modules/.prisma/client && prisma generate",
+    "prepare": "husky install"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
+  "lint-staged": {
+    "src/**/*.{js,ts,jsx,tsx}": [
+      "eslint --fix"
+    ]
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/server": "^11.11.0",
+    "@mantine/core": "^6.0.21",
+    "@mantine/dates": "^6.0.21",
+    "@mantine/dropzone": "^6.0.21",
+    "@mantine/hooks": "^6.0.21",
+    "@mantine/next": "6.0.21",
+    "@mantine/notifications": "^6.0.21",
+    "@mantine/nprogress": "^6.0.21",
+    "@prisma/client": "^5.6.0",
+    "@tanstack/match-sorter-utils": "^8.8.4",
+    "@tanstack/react-query": "^5.8.4",
+    "@tanstack/react-query-devtools": "^5.8.4",
+    "@tanstack/react-table": "^8.10.7",
+    "axios": "^1.6.2",
+    "bcrypt": "^5.1.1",
+    "dayjs": "^1.11.10",
+    "next": "14.0.3",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.0.3"
+    "react-hook-form": "^7.48.2",
+    "react-icons": "^4.12.0"
   },
   "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
+    "@types/bcrypt": "^5.0.2",
+    "@types/node": "^20.9.1",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
-    "eslint-config-next": "14.0.3"
+    "eslint-config-next": "14.0.3",
+    "husky": "^8.0.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
   }
 }
