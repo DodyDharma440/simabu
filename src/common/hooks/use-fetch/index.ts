@@ -13,11 +13,14 @@ import { ApiResponse } from "../../interfaces/api";
 export type UseFetchOptions<T, R = ApiResponse<T>> = {
   cancellation?: any[];
   uniqueKey?: QueryKey;
-} & UseQueryOptions<
-  AxiosResponse<R>,
-  AxiosError<any>,
-  AxiosResponse<R>,
-  QueryKey
+} & Omit<
+  UseQueryOptions<
+    AxiosResponse<R>,
+    AxiosError<any>,
+    AxiosResponse<R>,
+    QueryKey
+  >,
+  "queryKey"
 >;
 
 export const useFetch = <T, R = ApiResponse<T>>(

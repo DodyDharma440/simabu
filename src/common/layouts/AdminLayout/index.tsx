@@ -23,7 +23,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     ignoredLayout.includes(router.pathname) ||
     !router.pathname.startsWith("/admin");
 
-  const { isLoading, isRefetching, error } = useGetProfile();
+  const { isLoading, isRefetching, error } = useGetProfile(
+    {},
+    { enabled: !ignoredLayout.includes(router.pathname) }
+  );
 
   return (
     <Loader
