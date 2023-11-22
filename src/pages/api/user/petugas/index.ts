@@ -15,12 +15,9 @@ export const baseZodObj = {
   nama: z.string({
     required_error: "Nama harus diisi",
   }),
-  nip: z
-    .string({
-      required_error: "NIP harus diisi",
-    })
-    .min(16)
-    .max(16),
+  nip: z.string({
+    required_error: "NIP harus diisi",
+  }),
   alamat: z.string(),
   noTelp: z.string(),
   username: z.string({
@@ -42,6 +39,7 @@ const handler = makeHandler((prisma) => ({
     const count = await prisma.petugas.count();
     const results = await prisma.petugas.findMany({
       ...parsePaginationParams(req),
+      include: { user: true },
     });
 
     createResponse(res, paginationResponse(results, count));

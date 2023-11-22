@@ -5,9 +5,15 @@ const prisma = new PrismaClient();
 
 async function main() {
   const roleNames = ["Admin", "Petugas", "Mahasiswa"];
-  const roles = await prisma.role.createMany({
-    data: roleNames.map((name) => ({ name })),
-  });
+  const roles = await prisma.$transaction(
+    roleNames.map((role, index) =>
+      prisma.role.upsert({
+        update: {},
+        create: { name: role },
+        where: { id: index + 1 },
+      })
+    )
+  );
 
   const password = "admin";
   const hashedPassword = await bcrypt.hash(password, 10);

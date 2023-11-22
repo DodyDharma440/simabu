@@ -3,6 +3,7 @@ import { SiBookstack } from "react-icons/si";
 import { PiBooksFill } from "react-icons/pi";
 import { HiUsers } from "react-icons/hi2";
 import { ISidebarMenu } from "../interfaces/ui";
+import { HiLogout } from "react-icons/hi";
 
 export const adminMenus: ISidebarMenu[] = [
   {
@@ -29,5 +30,10 @@ export const adminMenus: ISidebarMenu[] = [
     label: "User Management",
     path: "/admin/user-management",
     icon: HiUsers,
+  },
+  {
+    label: "Logout",
+    path: "/logout",
+    icon: HiLogout,
   },
 ];

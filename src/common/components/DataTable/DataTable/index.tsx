@@ -147,11 +147,10 @@ const DataTable = <D extends Object, V = any>({
         <Box
           component="thead"
           sx={(theme) => ({
-            background: theme.fn.gradient(),
+            background: theme.colors.gray[isDark(theme) ? 8 : 2],
             backgroundAttachment: "fixed",
             ["& th"]: {
               whiteSpace: "nowrap",
-              color: `${theme.white}!important`,
             },
           })}
         >

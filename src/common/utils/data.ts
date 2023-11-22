@@ -78,3 +78,35 @@ export const saveFile = async (fileUrl: string, fileName: string) => {
     });
   }
 };
+
+export type Formatter<T extends object = any> = {
+  label: keyof T | ((item: T) => string);
+  value: keyof T | ((item: T) => string);
+};
+
+export type SelectOption = {
+  label: string;
+  value: string;
+};
+
+export const generateOptions = <T extends object = {}>(
+  values: T[],
+  format: Formatter<T>
+) => {
+  return values.map((item) => {
+    const label = (
+      format.label instanceof Function
+        ? format.label(item)
+        : (item[format.label] as any)
+    ).toString();
+    const value = (
+      format.value instanceof Function
+        ? format.value(item)
+        : (item[format.value] as any)
+    ).toString();
+    return {
+      label,
+      value,
+    } as SelectOption;
+  });
+};
