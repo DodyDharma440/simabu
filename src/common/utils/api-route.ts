@@ -33,11 +33,9 @@ export const makeHandler = (
       if (availableMethods.includes(req.method)) {
         try {
           await handlers[req.method as HttpMethod]?.(req, res);
-          return;
         } catch (error) {
           console.log(error);
           createErrResponse(res, error, 500);
-          return;
         }
       } else {
         return createErrResponse(res, "Method not allowed", 405);

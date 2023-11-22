@@ -18,7 +18,10 @@ const handler = makeHandler((prisma) => ({
     }
 
     const { username, password } = body as ILoginInput;
-    const user = await prisma.user.findUnique({ where: { username } });
+    const user = await prisma.user.findUnique({
+      where: { username },
+      include: { role: true },
+    });
 
     const checkPassword = bcrypt.compareSync(password, user?.password || "");
     if (!checkPassword || !user) {
@@ -26,9 +29,9 @@ const handler = makeHandler((prisma) => ({
       return;
     }
 
-    const { id } = user;
+    const { id, role } = user;
 
-    const token = await new SignJWT({ id })
+    const token = await new SignJWT({ id, role })
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
       .setExpirationTime("1d")

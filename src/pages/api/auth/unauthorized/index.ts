@@ -1,10 +1,8 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import { createErrResponse } from "@/common/utils/api-response";
-import { makeHandler } from "@/common/utils/api-route";
 
-const handler = makeHandler(() => ({
-  GET: async (req, res) => {
-    createErrResponse(res, "Unauthorized", 401);
-  },
-}));
+const handler = (_: NextApiRequest, res: NextApiResponse) => {
+  createErrResponse(res, "Unauthorized", 401);
+};
 
 export default handler;
