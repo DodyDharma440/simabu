@@ -4,6 +4,13 @@ import { IRole } from "@/auth/interfaces";
 import { BasicData } from "./common/interfaces/api";
 import { decodeJwt } from "jose";
 
+const adminOnlyEndpoints = [
+  "/user/petugas",
+  "/user/mahasiswa",
+  "/kategori-buku",
+  "buku",
+];
+
 export async function middleware(req: NextRequest) {
   const token = req.cookies.get(process.env["COOKIE_NAME"]!)?.value;
 
@@ -22,12 +29,15 @@ export async function middleware(req: NextRequest) {
   }>(token);
 
   const role = decodedToken?.role.name;
+  const checkRoleEndpoints = (targetRole: string, endpoints: string[]) => {
+    return (
+      role !== targetRole &&
+      endpoints.some((e) => req.nextUrl.pathname.startsWith(`/api${e}`))
+    );
+  };
 
-  if (
-    role !== "Admin" &&
-    req.nextUrl.pathname.startsWith("/api/user/petugas")
-  ) {
-    return NextResponse.redirect(new URL("/api/auth/unauthorized", req.url));
+  if (checkRoleEndpoints("Admin", adminOnlyEndpoints)) {
+    return NextResponse.redirect(new URL("/api/forbidden", req.url));
   }
 
   NextResponse.next();
