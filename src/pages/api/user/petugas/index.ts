@@ -43,6 +43,7 @@ const handler = makeHandler((prisma) => ({
             id: true,
             username: true,
             roleId: true,
+            role: true,
           },
         },
       },
@@ -71,7 +72,7 @@ const handler = makeHandler((prisma) => ({
       return;
     }
 
-    const hashedPassword = await bcrypt.hash(password, SALT);
+    const hashedPassword = await bcrypt.hash(password || "", SALT);
     const petugas = await prisma.petugas.create({
       data: {
         ...petugasBody,

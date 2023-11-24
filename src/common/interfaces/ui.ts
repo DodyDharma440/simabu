@@ -42,3 +42,8 @@ export type ButtonActionType =
   | "approval"
   | "print"
   | "download";
+
+export interface TableActionArgs<T, I = number> {
+  onEdit: (data: T) => void;
+  onDelete: (id: I) => void;
+}

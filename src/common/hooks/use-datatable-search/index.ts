@@ -4,7 +4,6 @@ import { useDebouncedValue } from "@mantine/hooks";
 export type UseDataTableSearch<K extends string> = {
   defaultValue?: string;
   delay?: number;
-  searchKeys?: K[] | ((value: string) => string[]);
   paramType?: "single" | "multiple";
 };
 
@@ -27,38 +26,11 @@ export const useDataTableSearch = <K extends string = string>(
 
   const searchParams = useMemo(() => {
     const params = new URLSearchParams();
-    if (props?.searchKeys) {
-      const { searchKeys } = props;
+    params.append("search", debouncedSearch);
 
-      if (paramType === "single") {
-        const values: string[] = [];
-
-        const handleMap = (key: string) => {
-          values.push(`${key}:${debouncedSearch}`);
-        };
-
-        if (searchKeys instanceof Function) {
-          searchKeys(debouncedSearch).forEach(handleMap);
-        } else {
-          searchKeys?.forEach(handleMap);
-        }
-
-        params.append("search", values.join(";"));
-      } else {
-        const handleMap = (key: string) => {
-          params.append(key, debouncedSearch);
-        };
-
-        if (searchKeys instanceof Function) {
-          searchKeys(debouncedSearch).forEach(handleMap);
-        } else {
-          searchKeys?.forEach(handleMap);
-        }
-      }
-    }
     return params.toString();
     // eslint-disable-next-line
-  }, [debouncedSearch, props?.searchKeys, paramType]);
+  }, [debouncedSearch, paramType]);
 
   const searchProps = {
     value: searchValue,

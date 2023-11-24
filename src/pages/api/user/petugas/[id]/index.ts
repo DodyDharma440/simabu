@@ -3,6 +3,7 @@ import { createErrResponse, createResponse } from "@/common/utils/api-response";
 import { makeHandler } from "@/common/utils/api-route";
 import { IOfficerInput } from "@/user/interfaces";
 import { petugasZodSchema } from "@/user/constants";
+import { decodeToken } from "@/common/utils/auth";
 
 const zodUpdateSchema = z.object(petugasZodSchema);
 
@@ -27,9 +28,12 @@ const handler = makeHandler((prisma) => ({
     }
 
     const { username, roleId, ...petugasBody } = body;
-    const usernameExist = await prisma.user.findUnique({ where: { username } });
+    const usernameExist = await prisma.user.findUnique({
+      where: { username },
+      include: { Petugas: true },
+    });
 
-    if (usernameExist) {
+    if (usernameExist && usernameExist.Petugas?.id !== Number(id)) {
       createErrResponse(res, "Username already exists", 400);
       return;
     }
@@ -37,6 +41,7 @@ const handler = makeHandler((prisma) => ({
     const petugas = await prisma.petugas.update({
       data: {
         ...petugasBody,
+        updatedAt: new Date().toISOString(),
         user: {
           update: {
             username,
@@ -50,11 +55,19 @@ const handler = makeHandler((prisma) => ({
     createResponse(res, petugas);
   },
   DELETE: async (req, res) => {
+    const userData = decodeToken(req);
+
     const id = Number(req.query.id);
+
     const petugas = await prisma.petugas.findUnique({ where: { id } });
 
     if (!petugas) {
       createErrResponse(res, "User not found", 404);
+      return;
+    }
+
+    if (userData?.id === petugas.userId) {
+      createErrResponse(res, "Tidak dapat menghapus diri sendiri.", 400);
       return;
     }
 

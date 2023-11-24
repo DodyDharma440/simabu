@@ -1,7 +1,7 @@
 import { useGetRoles } from "@/auth/actions";
 import { EditData } from "@/common/hooks";
 import { generateOptions } from "@/common/utils/data";
-import { useCreateOfficer } from "@/user/actions";
+import { useCreateOfficer, useUpdateOfficer } from "@/user/actions";
 import { IOfficerInput } from "@/user/interfaces";
 import {
   Button,
@@ -30,6 +30,8 @@ const OfficerForm: React.FC<OfficerFormProps> = ({
 }) => {
   const { mutate: createOfficer, isPending: isLoadingCreate } =
     useCreateOfficer({ onSuccess: onClose });
+  const { mutate: updateOfficer, isPending: isLoadingUpdate } =
+    useUpdateOfficer({ onSuccess: onClose });
 
   const { data: dataRole, refetch: refetchRoles } = useGetRoles(
     {},
@@ -48,24 +50,32 @@ const OfficerForm: React.FC<OfficerFormProps> = ({
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<IOfficerInput>();
 
   const submitHandler = useCallback(
     (values: IOfficerInput) => {
       if (editData.id) {
+        updateOfficer({ formValues: values, id: editData.id });
       } else {
         createOfficer({ formValues: values });
       }
     },
-    [createOfficer, editData.id]
+    [createOfficer, editData.id, updateOfficer]
   );
 
   useEffect(() => {
     if (isOpen) {
       reset();
       refetchRoles();
+
+      if (editData.values) {
+        Object.entries(editData.values).forEach(([key, value]) => {
+          setValue(key as keyof IOfficerInput, value);
+        });
+      }
     }
-  }, [isOpen, refetchRoles, reset]);
+  }, [editData.values, isOpen, refetchRoles, reset, setValue]);
 
   return (
     <Modal
@@ -85,18 +95,20 @@ const OfficerForm: React.FC<OfficerFormProps> = ({
             placeholder="Username"
             error={errors.username?.message}
           />
-          <PasswordInput
-            label="Password"
-            {...register("password", {
-              required: "Password harus diisi",
-              minLength: {
-                value: 8,
-                message: "Password minimal 8 karakter",
-              },
-            })}
-            placeholder="Password"
-            error={errors.password?.message}
-          />
+          {!editData.id ? (
+            <PasswordInput
+              label="Password"
+              {...register("password", {
+                required: "Password harus diisi",
+                minLength: {
+                  value: 8,
+                  message: "Password minimal 8 karakter",
+                },
+              })}
+              placeholder="Password"
+              error={errors.password?.message}
+            />
+          ) : null}
           <TextInput
             label="Nama"
             {...register("nama", {
@@ -148,7 +160,7 @@ const OfficerForm: React.FC<OfficerFormProps> = ({
           <Button color="gray" onClick={onClose}>
             Batal
           </Button>
-          <Button type="submit" loading={isLoadingCreate}>
+          <Button type="submit" loading={isLoadingCreate || isLoadingUpdate}>
             Simpan
           </Button>
         </Group>

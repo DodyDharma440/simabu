@@ -87,14 +87,14 @@ export const post = <T, F, D extends Object = {}, R = ApiResponse<T>>(
   return createMutationFunction(apiFn, queryKey, defaultOptions);
 };
 
-export type UpdateData<T, I = string, D extends Object = {}> = {
+export type UpdateData<T, I = number, D extends Object = {}> = {
   formValues: T;
   id: I;
 } & D;
 export const patch = <
   T,
   F,
-  I = string,
+  I = number,
   D extends Object = {},
   R = ApiResponse<T>
 >(
@@ -105,10 +105,10 @@ export const patch = <
   return createMutationFunction(apiFn, queryKey, defaultOptions);
 };
 
-export type DeleteData<I = string, D extends Object = {}> = { id: I } & D;
+export type DeleteData<I = number, D extends Object = {}> = { id: I } & D;
 export const remove = <
   T,
-  I = string,
+  I = number,
   D extends Object = {},
   R = ApiResponse<T>
 >(
@@ -122,6 +122,14 @@ export const remove = <
 export const getErrorMessage = (error: AxiosError<any>) => {
   if (error) {
     if (error?.response?.data) {
+      const errRes = error?.response?.data?.error;
+
+      if (errRes instanceof Object) {
+        if (errRes?.name === "PrismaClientValidationError") {
+          return "Error in Prisma";
+        }
+      }
+
       return error?.response?.data?.message || error?.response?.data?.error;
     } else if (error.message) {
       return error.message;

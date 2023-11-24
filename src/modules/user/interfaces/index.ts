@@ -12,4 +12,6 @@ export interface IOfficer extends BasicData {
 
 export interface IOfficerInput
   extends Omit<IOfficer, keyof BasicData | "userId" | "user">,
-    Pick<IUser, "username" | "password" | "roleId"> {}
+    Pick<IUser, "username" | "roleId"> {
+  password?: string;
+}

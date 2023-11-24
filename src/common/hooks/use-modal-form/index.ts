@@ -2,12 +2,12 @@ import { useDisclosure } from "@mantine/hooks";
 import { useState, useCallback } from "react";
 import { IFormModalProps } from "../../interfaces/ui";
 
-export type EditData<T, I = string> = {
+export type EditData<T, I = number> = {
   values: T | null;
   id: I | null;
 };
 
-export const useModalForm = <T extends any = any, I = string>(
+export const useModalForm = <T extends any = any, I = number>(
   defaultOpen?: boolean
 ) => {
   const [
