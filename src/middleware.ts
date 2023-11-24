@@ -7,8 +7,8 @@ import { decodeJwt } from "jose";
 const adminOnlyEndpoints = [
   "/user/petugas",
   "/user/mahasiswa",
-  "/kategori-buku",
-  "buku",
+  "/book-category",
+  "/book",
 ];
 
 export async function middleware(req: NextRequest) {
