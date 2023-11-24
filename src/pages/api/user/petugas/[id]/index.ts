@@ -2,11 +2,9 @@ import { z } from "zod";
 import { createErrResponse, createResponse } from "@/common/utils/api-response";
 import { makeHandler } from "@/common/utils/api-route";
 import { IOfficerInput } from "@/user/interfaces";
-import { baseZodObj } from "..";
+import { petugasZodSchema } from "@/user/constants";
 
-const zodUpdateSchema = z.object({
-  ...baseZodObj,
-});
+const zodUpdateSchema = z.object(petugasZodSchema);
 
 const handler = makeHandler((prisma) => ({
   PATCH: async (req, res) => {
@@ -40,7 +38,7 @@ const handler = makeHandler((prisma) => ({
       data: {
         ...petugasBody,
         user: {
-          create: {
+          update: {
             username,
             roleId: Number(roleId),
           },

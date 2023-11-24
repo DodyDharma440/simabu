@@ -3,30 +3,17 @@ import {
   createErrResponse,
   createResponse,
   paginationResponse,
-  parsePaginationParams,
+  parseParams,
 } from "@/common/utils/api-response";
 import { z } from "zod";
 import { makeHandler } from "@/common/utils/api-route";
 import { IOfficerInput } from "@/user/interfaces";
+import { petugasZodSchema } from "@/user/constants";
 
 const SALT = 10;
 
-export const baseZodObj = {
-  nama: z.string({
-    required_error: "Nama harus diisi",
-  }),
-  nip: z.string({
-    required_error: "NIP harus diisi",
-  }),
-  alamat: z.string(),
-  noTelp: z.string(),
-  username: z.string({
-    required_error: "Username harus diisi",
-  }),
-};
-
 const zodCreateSchema = z.object({
-  ...baseZodObj,
+  ...petugasZodSchema,
   password: z
     .string({
       required_error: "Password harus diisi",
@@ -37,9 +24,28 @@ const zodCreateSchema = z.object({
 const handler = makeHandler((prisma) => ({
   GET: async (req, res) => {
     const count = await prisma.petugas.count();
+
+    const searchFields = [
+      "nama",
+      "nip",
+      "alamat",
+      "noTelp",
+      "user.username",
+      "user.role.name",
+    ];
+
     const results = await prisma.petugas.findMany({
-      ...parsePaginationParams(req),
-      include: { user: true },
+      ...parseParams(req, "pagination"),
+      ...parseParams(req, "search", { search: { fields: searchFields } }),
+      include: {
+        user: {
+          select: {
+            id: true,
+            username: true,
+            roleId: true,
+          },
+        },
+      },
     });
 
     createResponse(res, paginationResponse(results, count));

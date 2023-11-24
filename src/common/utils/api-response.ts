@@ -58,3 +58,51 @@ export const parsePaginationParams = (req: NextApiRequest) => {
 
   return {};
 };
+
+export const parseSearchParams = (req: NextApiRequest, fields?: string[]) => {
+  const searchValue = (req.query["search"] as string | undefined) || "";
+
+  const searchQuery: any[] = [];
+
+  const set = (obj: Record<any, any>, path: string[]) => {
+    path.reduce((acc, key, i) => {
+      if (acc[key] === undefined) acc[key] = {};
+      if (i === path.length - 1) acc[key] = { contains: searchValue };
+      return acc[key];
+    }, obj);
+  };
+
+  fields?.forEach((field) => {
+    const splitted = field.split(".");
+    if (splitted.length > 1) {
+      const obj: Record<string, any> = {};
+      set(obj, splitted);
+      searchQuery.push(obj);
+    } else {
+      searchQuery.push({ [field]: { contains: searchValue } });
+    }
+  });
+
+  return {
+    where: searchValue ? { OR: searchQuery } : {},
+  };
+};
+
+type ParseParamsOptions = {
+  search?: {
+    fields?: string[];
+  };
+};
+
+export const parseParams = (
+  req: NextApiRequest,
+  paramType: "pagination" | "search",
+  options?: ParseParamsOptions
+) => {
+  switch (paramType) {
+    case "pagination":
+      return parsePaginationParams(req);
+    case "search":
+      return parseSearchParams(req, options?.search?.fields);
+  }
+};
