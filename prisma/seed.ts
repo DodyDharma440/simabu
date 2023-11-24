@@ -15,6 +15,22 @@ async function main() {
     )
   );
 
+  const studyProgramNames = [
+    "Informatika",
+    "Sistem Informasi",
+    "Sistem Informasi Akuntansi",
+  ];
+  const shortSp = ["IF", "SI", "SIA"];
+  const studyPrograms = await prisma.$transaction(
+    studyProgramNames.map((sp, index) =>
+      prisma.programStudi.upsert({
+        update: {},
+        create: { nama: sp, namaSingkat: shortSp[index] },
+        where: { id: index + 1 },
+      })
+    )
+  );
+
   const password = "admin";
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -39,7 +55,7 @@ async function main() {
     },
   });
 
-  console.log({ roles, admin, petugasAdmin });
+  console.log({ roles, studyPrograms, admin, petugasAdmin });
 }
 
 main()

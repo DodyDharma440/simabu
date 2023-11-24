@@ -1,6 +1,7 @@
 import { Box, Tabs } from "@mantine/core";
 import React from "react";
 import OfficerTable from "../OfficerTable";
+import StudentTable from "../StudentTable";
 
 const UserContainer = () => {
   return (
@@ -29,7 +30,9 @@ const UserContainer = () => {
       </Tabs.Panel>
 
       <Tabs.Panel value="student" pt="xs">
-        <Box px="md">Student</Box>
+        <Box px="md">
+          <StudentTable />
+        </Box>
       </Tabs.Panel>
     </Tabs>
   );

@@ -1,8 +1,8 @@
-import { useGetRoles } from "@/auth/actions";
+import { useGetRoles, useGetStudyPrograms } from "@/auth/actions";
 import { EditData } from "@/common/hooks";
 import { generateOptions } from "@/common/utils/data";
-import { useCreateOfficer, useUpdateOfficer } from "@/user/actions";
-import { IOfficerInput } from "@/user/interfaces";
+import { useCreateStudent, useUpdateStudent } from "@/user/actions";
+import { IStudentInput } from "@/user/interfaces";
 import {
   Button,
   Divider,
@@ -17,32 +17,33 @@ import {
 import React, { useCallback, useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-type OfficerFormProps = {
+type StudentFormProps = {
   isOpen: boolean;
   onClose: () => void;
-  editData: EditData<IOfficerInput>;
+  editData: EditData<IStudentInput>;
 };
 
-const OfficerForm: React.FC<OfficerFormProps> = ({
+const StudentForm: React.FC<StudentFormProps> = ({
   isOpen,
   onClose,
   editData,
 }) => {
-  const { mutate: createOfficer, isPending: isLoadingCreate } =
-    useCreateOfficer({ onSuccess: onClose });
-  const { mutate: updateOfficer, isPending: isLoadingUpdate } =
-    useUpdateOfficer({ onSuccess: onClose });
+  const { mutate: createStudent, isPending: isLoadingCreate } =
+    useCreateStudent({ onSuccess: onClose });
+  const { mutate: updateStudent, isPending: isLoadingUpdate } =
+    useUpdateStudent({ onSuccess: onClose });
 
-  const { data: dataRole, refetch: refetchRoles } = useGetRoles(
+  const { data: dataSp, refetch: refetchSps } = useGetStudyPrograms(
     {},
     { enabled: false }
   );
-  const roleOptions = useMemo(() => {
-    return generateOptions(dataRole?.data.data || [], {
+
+  const spOptions = useMemo(() => {
+    return generateOptions(dataSp?.data.data || [], {
       value: "id",
-      label: "name",
-    }).filter((opt) => opt.label !== "Mahasiswa");
-  }, [dataRole?.data.data]);
+      label: "nama",
+    });
+  }, [dataSp?.data.data]);
 
   const {
     register,
@@ -51,66 +52,44 @@ const OfficerForm: React.FC<OfficerFormProps> = ({
     formState: { errors },
     reset,
     setValue,
-  } = useForm<IOfficerInput>();
+  } = useForm<IStudentInput>();
 
   const submitHandler = useCallback(
-    (values: IOfficerInput) => {
+    (values: IStudentInput) => {
       if (editData.id) {
-        updateOfficer({ formValues: values, id: editData.id });
+        updateStudent({ formValues: values, id: editData.id });
       } else {
-        createOfficer({ formValues: values });
+        createStudent({ formValues: values });
       }
     },
-    [createOfficer, editData.id, updateOfficer]
+    [createStudent, editData.id, updateStudent]
   );
 
   useEffect(() => {
     if (isOpen) {
       reset();
-      refetchRoles();
+      refetchSps();
 
       if (editData.values) {
         Object.entries(editData.values).forEach(([key, value]) => {
-          setValue(key as keyof IOfficerInput, value);
+          setValue(key as keyof IStudentInput, value);
         });
       }
     }
-  }, [editData.values, isOpen, refetchRoles, reset, setValue]);
+  }, [editData.values, isOpen, refetchSps, reset, setValue]);
 
   return (
     <Modal
       title={
-        <Title order={5}>{`${editData.id ? "Edit" : "Tambah"} Petugas`} </Title>
+        <Title order={5}>
+          {`${editData.id ? "Edit" : "Tambah"} Mahasiswa`}{" "}
+        </Title>
       }
       opened={isOpen}
       onClose={onClose}
     >
       <form onSubmit={handleSubmit(submitHandler)}>
         <Stack spacing="sm">
-          <TextInput
-            label="Username"
-            autoComplete="off"
-            {...register("username", {
-              required: "Username harus diisi",
-            })}
-            placeholder="Username"
-            error={errors.username?.message}
-          />
-          {!editData.id ? (
-            <PasswordInput
-              autoComplete="new-password"
-              label="Password"
-              {...register("password", {
-                required: "Password harus diisi",
-                minLength: {
-                  value: 8,
-                  message: "Password minimal 8 karakter",
-                },
-              })}
-              placeholder="Password"
-              error={errors.password?.message}
-            />
-          ) : null}
           <TextInput
             label="Nama"
             {...register("nama", {
@@ -120,12 +99,12 @@ const OfficerForm: React.FC<OfficerFormProps> = ({
             error={errors.nama?.message}
           />
           <TextInput
-            label="NIP"
-            {...register("nip", {
-              required: "NIP harus diisi",
+            label="NIM"
+            {...register("nim", {
+              required: "NIM harus diisi",
             })}
-            placeholder="NIP"
-            error={errors.nip?.message}
+            placeholder="NIM"
+            error={errors.nim?.message}
           />
           <TextInput
             label="Alamat"
@@ -141,21 +120,37 @@ const OfficerForm: React.FC<OfficerFormProps> = ({
           />
           <Controller
             control={control}
-            name="roleId"
+            name="programStudiId"
             render={({ field }) => {
               return (
                 <Select
                   label="Role"
                   {...field}
+                  autoComplete="off"
                   value={`${field.value}`}
                   onChange={(val) => field.onChange(Number(val))}
-                  placeholder="Pilih Role"
-                  data={roleOptions}
-                  error={errors.roleId?.message}
+                  placeholder="Pilih Program Studi"
+                  data={spOptions}
+                  error={errors.programStudiId?.message}
                 />
               );
             }}
           />
+          {!editData.id ? (
+            <PasswordInput
+              label="Password"
+              autoComplete="new-password"
+              {...register("password", {
+                required: "Password harus diisi",
+                minLength: {
+                  value: 8,
+                  message: "Password minimal 8 karakter",
+                },
+              })}
+              placeholder="Password"
+              error={errors.password?.message}
+            />
+          ) : null}
         </Stack>
         <Divider my="md" />
         <Group position="right">
@@ -171,4 +166,4 @@ const OfficerForm: React.FC<OfficerFormProps> = ({
   );
 };
 
-export default OfficerForm;
+export default StudentForm;

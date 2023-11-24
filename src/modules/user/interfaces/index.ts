@@ -15,3 +15,24 @@ export interface IOfficerInput
     Pick<IUser, "username" | "roleId"> {
   password?: string;
 }
+
+export interface IStudyProgram extends BasicData {
+  nama: string;
+  namaSingkat: string;
+}
+
+export interface IStudent extends BasicData {
+  nama: string;
+  nim: string;
+  alamat: string | null;
+  noTelp: string | null;
+  userId: number;
+  user?: IUser;
+  programStudiId: number;
+  programStudi?: IStudyProgram;
+}
+
+export interface IStudentInput
+  extends Omit<IStudent, keyof BasicData | "userId" | "user" | "programStudi"> {
+  password?: string;
+}

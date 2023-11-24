@@ -18,14 +18,15 @@ model Role {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  username  String   @unique
+  id        Int        @id @default(autoincrement())
+  username  String     @unique
   password  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  role      Role     @relation(fields: [roleId], references: [id])
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @default(now())
+  role      Role       @relation(fields: [roleId], references: [id])
   roleId    Int
   Petugas   Petugas?
+  Mahasiswa Mahasiswa?
 }
 
 model ProgramStudi {
@@ -59,6 +60,8 @@ model Mahasiswa {
   updatedAt      DateTime     @default(now())
   programStudi   ProgramStudi @relation(fields: [programStudiId], references: [id])
   programStudiId Int
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         Int          @unique
 }
 
 model Kategori {

@@ -33,9 +33,13 @@ export const makeHandler = (
       if (availableMethods.includes(req.method)) {
         try {
           await handlers[req.method as HttpMethod]?.(req, res);
-        } catch (error) {
-          console.log(error);
-          createErrResponse(res, error, 500);
+        } catch (error: any) {
+          console.log("🚀 ~ file: api-route.ts:37 ~ handler ~ error:", error);
+          createErrResponse(
+            res,
+            { ...error, message: error?.message.split("\n") },
+            500
+          );
         }
       } else {
         return createErrResponse(res, "Method not allowed", 405);
