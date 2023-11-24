@@ -23,8 +23,6 @@ const zodCreateSchema = z.object({
 
 const handler = makeHandler((prisma) => ({
   GET: async (req, res) => {
-    const count = await prisma.mahasiswa.count();
-
     const searchFields = [
       "nama",
       "nim",
@@ -34,10 +32,15 @@ const handler = makeHandler((prisma) => ({
       "user.role.name",
       "programStudi.nama",
     ];
+    const searchParam = parseParams(req, "search", {
+      search: { fields: searchFields },
+    });
+
+    const count = await prisma.mahasiswa.count(searchParam);
 
     const results = await prisma.mahasiswa.findMany({
       ...parseParams(req, "pagination"),
-      ...parseParams(req, "search", { search: { fields: searchFields } }),
+      ...searchParam,
       include: {
         user: {
           select: {

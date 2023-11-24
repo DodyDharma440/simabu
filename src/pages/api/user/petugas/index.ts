@@ -23,8 +23,6 @@ const zodCreateSchema = z.object({
 
 const handler = makeHandler((prisma) => ({
   GET: async (req, res) => {
-    const count = await prisma.petugas.count();
-
     const searchFields = [
       "nama",
       "nip",
@@ -33,10 +31,15 @@ const handler = makeHandler((prisma) => ({
       "user.username",
       "user.role.name",
     ];
+    const searchParam = parseParams(req, "search", {
+      search: { fields: searchFields },
+    });
+
+    const count = await prisma.petugas.count(searchParam);
 
     const results = await prisma.petugas.findMany({
       ...parseParams(req, "pagination"),
-      ...parseParams(req, "search", { search: { fields: searchFields } }),
+      ...searchParam,
       include: {
         user: {
           select: {
