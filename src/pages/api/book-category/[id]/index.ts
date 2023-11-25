@@ -1,6 +1,6 @@
+import { IBookCategoryInput } from "@/books/interfaces";
 import { createErrResponse, createResponse } from "@/common/utils/api-response";
 import { makeHandler } from "@/common/utils/api-route";
-import { IBookCategoryInput } from "../../../admin/books/interfaces";
 
 export default makeHandler((prisma) => ({
   PATCH: async (req, res) => {

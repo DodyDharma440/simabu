@@ -5,7 +5,7 @@ import {
   paginationResponse,
   parseParams,
 } from "@/common/utils/api-response";
-import { IBookCategoryInput } from "../../admin/books/interfaces";
+import { IBookCategoryInput } from "@/books/interfaces";
 
 export default makeHandler((prisma) => ({
   GET: async (req, res) => {
