@@ -36,7 +36,8 @@ export const makeHandler = (
         try {
           await handlers[req.method as HttpMethod]?.(req, res);
         } catch (error: any) {
-          console.log("🚀 ~ file: api-route.ts:37 ~ handler ~ error:", error);
+          // eslint-disable-next-line
+          console.log("Error API routes handler", error);
           createErrResponse(
             res,
             { ...error, message: error?.message.split("\n") },
@@ -83,9 +84,10 @@ export const uploadFile = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     return req;
-  } catch (error) {
-    console.log("🚀 ~ file: api-route.ts:90 ~ error:", error);
-    createErrResponse(res, error);
+  } catch (error: any) {
+    // eslint-disable-next-line
+    console.log("Error upload file", error);
+    createErrResponse(res, error?.message);
   }
 };
 

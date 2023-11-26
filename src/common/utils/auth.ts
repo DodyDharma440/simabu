@@ -10,7 +10,8 @@ export const verifyToken = async (token: string) => {
     );
     return Boolean(payload);
   } catch (error) {
-    console.error(error);
+    // eslint-disable-next-line
+    console.log("Error verify token: ", error);
     return false;
   }
 };

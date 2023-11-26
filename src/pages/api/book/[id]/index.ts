@@ -40,7 +40,6 @@ export default makeHandler((prisma) => ({
       }
 
       const body = req.body as IBookInput;
-      console.log("🚀 ~ file: index.ts:41 ~ PATCH: ~ body:", body);
       body.tahunTerbit = Number(body.tahunTerbit);
       body.nomorRak = Number(body.nomorRak);
       body.jumlahHalaman = Number(body.jumlahHalaman);
@@ -82,7 +81,6 @@ export default makeHandler((prisma) => ({
 
       createResponse(res, book);
     } catch (err: any) {
-      console.log("🚀 ~ file: index.ts:84 ~ POST: ~ err:", err);
       createErrResponse(res, err.message);
     }
   },
