@@ -39,15 +39,17 @@ model ProgramStudi {
 }
 
 model Petugas {
-  id        Int      @id @default(autoincrement())
-  nama      String
-  nip       String   @unique
-  alamat    String?
-  noTelp    String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int      @unique
+  id           Int            @id @default(autoincrement())
+  nama         String
+  nip          String         @unique
+  alamat       String?
+  noTelp       String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @default(now())
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       Int            @unique
+  Peminjaman   Peminjaman[]
+  Pengembalian Pengembalian[]
 }
 
 model Mahasiswa {
@@ -62,6 +64,7 @@ model Mahasiswa {
   programStudiId Int
   user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         Int          @unique
+  Peminjaman     Peminjaman[]
 }
 
 model Kategori {
@@ -73,20 +76,64 @@ model Kategori {
 }
 
 model Buku {
-  id            Int      @id @default(autoincrement())
-  judul         String
-  kodeBuku      String   @unique
-  imageUrl      String?
-  penerbit      String
-  tahunTerbit   Int
-  jumlahHalaman Int
-  penulis       String?
-  nomorRak      Int
-  stok          Int
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @default(now())
-  createdBy     String?
-  updatedBy     String?
-  kategori      Kategori @relation(fields: [kategoriId], references: [id])
-  kategoriId    Int
+  id               Int                @id @default(autoincrement())
+  judul            String
+  kodeBuku         String             @unique
+  imageUrl         String?
+  penerbit         String
+  tahunTerbit      Int
+  jumlahHalaman    Int
+  penulis          String?
+  nomorRak         Int
+  stok             Int
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @default(now())
+  createdBy        String?
+  updatedBy        String?
+  kategori         Kategori           @relation(fields: [kategoriId], references: [id])
+  kategoriId       Int
+  DetailPeminjaman DetailPeminjaman[]
+}
+
+enum StatusPeminjaman {
+  Pengajuan
+  Diterima
+  Ditolak
+}
+
+model Peminjaman {
+  id                Int                @id @default(autoincrement())
+  status            StatusPeminjaman   @default(Pengajuan)
+  mahasiswa         Mahasiswa          @relation(fields: [mahasiswaId], references: [id])
+  mahasiswaId       Int
+  petugas           Petugas            @relation(fields: [petugasId], references: [id])
+  petugasId         Int
+  tanggalPeminjaman DateTime
+  tanggalKembali    DateTime
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @default(now())
+  DetailPeminjaman  DetailPeminjaman[]
+  Pengembalian      Pengembalian?
+}
+
+model DetailPeminjaman {
+  id           Int        @id @default(autoincrement())
+  buku         Buku       @relation(fields: [bukuId], references: [id])
+  bukuId       Int
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @default(now())
+  peminjaman   Peminjaman @relation(fields: [peminjamanId], references: [id])
+  peminjamanId Int
+}
+
+model Pengembalian {
+  id                  Int        @id @default(autoincrement())
+  tanggalPengembalian DateTime
+  petugasPenerima     Petugas    @relation(fields: [petugasId], references: [id])
+  petugasId           Int
+  denda               Float?
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @default(now())
+  peminjaman          Peminjaman @relation(fields: [peminjamanId], references: [id])
+  peminjamanId        Int        @unique
 }
