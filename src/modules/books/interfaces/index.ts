@@ -5,3 +5,19 @@ export interface IBookCategory extends BasicData {
 }
 
 export interface IBookCategoryInput extends Pick<IBookCategory, "nama"> {}
+
+export interface IBook extends BasicData {
+  judul: string;
+  kodeBuku: string;
+  imageUrl: string | null;
+  penerbit: string;
+  tahunTerbit: number;
+  jumlahHalaman: number;
+  penulis: string | null;
+  nomorRak: number;
+  stok: number;
+  kategoriId: number;
+  kategori?: IBookCategory;
+}
+
+export interface IBookInput extends Omit<IBook, keyof BasicData | "kategori"> {}

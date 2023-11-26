@@ -82,6 +82,7 @@ model Buku {
   jumlahHalaman Int
   penulis       String?
   nomorRak      Int
+  stok          Int
   createdAt     DateTime @default(now())
   updatedAt     DateTime @default(now())
   createdBy     String?

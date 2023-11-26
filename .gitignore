@@ -39,3 +39,6 @@ next-env.d.ts
 
 # prisma
 prisma/generated
+
+# public
+public/uploads
