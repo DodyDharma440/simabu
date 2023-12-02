@@ -51,5 +51,7 @@ export const config = {
     "/api/book-category/:path*",
     "/api/book",
     "/api/book/:path*",
+    "/api/borrow",
+    "/api/borrow/:path*",
   ],
 };
