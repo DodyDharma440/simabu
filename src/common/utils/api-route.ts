@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import { createErrResponse } from "./api-response";
-import multer from "multer";
-import { makeFileName } from "./data";
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
@@ -54,41 +52,6 @@ export const makeHandler = (
   };
 
   return handler;
-};
-
-export const uploadFile = async (req: NextApiRequest, res: NextApiResponse) => {
-  try {
-    let imageName = "";
-
-    const storage = multer.diskStorage({
-      destination: (req, file, cb) => {
-        cb(null, "public/uploads");
-      },
-      filename: (req, file, cb) => {
-        imageName = makeFileName(file, res);
-        cb(null, imageName);
-      },
-    });
-
-    const upload = multer({ storage });
-    await runMiddleware(req, res, upload.any());
-
-    if (req.files?.length) {
-      if (req.files.length > 1) {
-        return res.status(400).json({
-          message: "Only 1 file allowed",
-        });
-      }
-
-      req.imageUrl = `${process.env["NEXT_PUBLIC_API_BASE_URL"]}/api/image/${imageName}`;
-    }
-
-    return req;
-  } catch (error: any) {
-    // eslint-disable-next-line
-    console.log("Error upload file", error);
-    createErrResponse(res, error?.message);
-  }
 };
 
 export const runMiddleware = (

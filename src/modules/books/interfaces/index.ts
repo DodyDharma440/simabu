@@ -21,3 +21,9 @@ export interface IBook extends BasicData {
 }
 
 export interface IBookInput extends Omit<IBook, keyof BasicData | "kategori"> {}
+
+export interface ICategory extends BasicData {
+  nama: string;
+}
+
+export interface ICategoryInput extends Pick<ICategory, "nama"> {}

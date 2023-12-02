@@ -22,7 +22,7 @@ export const useUpdateBookCategories = patch<IBookCategory, IBookCategoryInput>(
 );
 
 export const useDeleteBookCategories = remove<boolean>(
-  ({ id }) => apiSimabu.post(`/book-category/${id}`),
+  ({ id }) => apiSimabu.delete(`/book-category/${id}`),
   [BOOK_CATEGORIES],
   { successMessage: "Kategori buku berhasil dihapus" }
 );

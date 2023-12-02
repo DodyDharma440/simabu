@@ -1,4 +1,9 @@
 import { z } from "zod";
+import { ICategory } from "../interfaces";
+import { TableActionArgs } from "@/common/interfaces/ui";
+import { createTableColumns } from "@/common/utils/react-table";
+import { ActionIcon, Group } from "@mantine/core";
+import { HiPencilAlt, HiTrash } from "react-icons/hi";
 
 export const BOOK_CATEGORIES = "book-categories";
 
@@ -24,4 +29,39 @@ export const bookZodSchema = {
   nomorRak: z.number({ required_error: "Nomor Rak harus diisi" }),
   stok: z.number({ required_error: "Stok harus diisi" }),
   kategoriId: z.number({ required_error: "Kategori harus diisi" }),
+};
+
+export const categoriesCols = ({
+  onEdit,
+  onDelete,
+}: TableActionArgs<ICategory>) => {
+  return createTableColumns<ICategory>(({ accessor }) => [
+    accessor("nama", {
+      header: "Nama",
+    }),
+    {
+      header: "Aksi",
+      justifyHeader: "center",
+      cell: ({ row }) => {
+        return (
+          <Group spacing="xs" noWrap position="center" w="100%">
+            <ActionIcon
+              onClick={() => onEdit(row.original)}
+              color="primary"
+              variant="filled"
+            >
+              <HiPencilAlt />
+            </ActionIcon>
+            <ActionIcon
+              onClick={() => onDelete(row.original.id)}
+              color="red"
+              variant="filled"
+            >
+              <HiTrash />
+            </ActionIcon>
+          </Group>
+        );
+      },
+    },
+  ]);
 };
