@@ -80,9 +80,3 @@ export default makeHandler((prisma) => ({
     createResponse(res, book, 201);
   },
 }));
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};

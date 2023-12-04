@@ -22,6 +22,11 @@ export interface IBook extends BasicData {
 
 export interface IBookInput extends Omit<IBook, keyof BasicData | "kategori"> {}
 
+export interface IBookInputUi extends IBookInput {
+  tahunTerbitDate: Date | null;
+  imageFile: File | null;
+}
+
 export interface ICategory extends BasicData {
   nama: string;
 }

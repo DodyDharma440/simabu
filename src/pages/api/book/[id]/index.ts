@@ -97,9 +97,3 @@ export default makeHandler((prisma) => ({
     createResponse(res, true);
   },
 }));
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};

@@ -24,6 +24,7 @@ export const adminMenus: ISidebarMenu[] = [
   {
     label: "Buku",
     path: "/admin/books",
+    pathnames: ["/admin/books/create", "/admin/books/edit/[id]"],
     icon: PiBooksFill,
   },
   {
