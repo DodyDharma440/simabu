@@ -2,6 +2,7 @@ import React from "react";
 import Head from "next/head";
 import { Button } from "@mantine/core";
 import Link from "next/link";
+import MobileLayout from "@/common/layouts/MobileLayout";
 
 const Simabu = () => {
   return (
@@ -10,9 +11,11 @@ const Simabu = () => {
         <title>SIMABU</title>
       </Head>
 
-      <Link href="/login">
-        <Button>Login</Button>
-      </Link>
+      <MobileLayout>
+        <Link href="/login">
+          <Button>Login</Button>
+        </Link>
+      </MobileLayout>
     </>
   );
 };

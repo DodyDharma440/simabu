@@ -1,8 +1,9 @@
 import React from "react";
+import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { Content, Loader } from "@/common/components";
+import { withAuth } from "@/common/hocs";
 import { BookForm } from "@/books/components";
-import { GetServerSideProps, NextPage } from "next";
 import { useGetBook } from "@/books/actions";
 
 type EditBookProps = {
@@ -35,4 +36,4 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   };
 };
 
-export default EditBook;
+export default withAuth(EditBook, "Admin");

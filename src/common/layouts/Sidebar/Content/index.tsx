@@ -14,10 +14,10 @@ import {
   ScrollArea,
   Switch,
   useMantineColorScheme,
+  Card,
 } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
 import { IoMenuOutline } from "react-icons/io5";
-import { isDark } from "@/common/utils/theme";
 import { useUserProfile } from "@/auth/hooks";
 import { ISidebarMenu } from "@/common/interfaces/ui";
 import SidebarItem from "../Item";
@@ -35,10 +35,16 @@ const Content: React.FC<ContentProps> = ({
   isOpenTransition,
   menus,
 }) => {
-  // const { userData } = useUserProfile();
+  const { userData } = useUserProfile();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 
   useHotkeys([["mod+B", () => onClose()]]);
+
+  const protectedMenus = useMemo(() => {
+    return menus.filter((menu) => {
+      return menu.roles?.includes(userData?.user?.role?.name || "") || false;
+    });
+  }, [menus, userData?.user?.role?.name]);
 
   return (
     <Stack
@@ -83,13 +89,26 @@ const Content: React.FC<ContentProps> = ({
         sx={{ flex: 1 }}
       >
         <Stack align={isSidebarOpen ? "left" : "center"} spacing="md">
-          {menus.map((menu, index) => {
+          {protectedMenus.map((menu, index) => {
             return (
               <SidebarItem iconOnly={!isSidebarOpen} item={menu} key={index} />
             );
           })}
         </Stack>
       </ScrollArea>
+      <Card
+        withBorder
+        radius="md"
+        sx={{ display: "flex", alignItems: "center" }}
+      >
+        <Avatar mr="md" color="primary" radius="xl" />
+        <Box>
+          <Text>{userData?.nama}</Text>
+          <Text size="xs" color="dimmed">
+            {userData?.user?.role?.name}
+          </Text>
+        </Box>
+      </Card>
       <Switch
         mx={isSidebarOpen ? 0 : "xs"}
         label={isSidebarOpen ? "Dark Mode" : ""}

@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Head from "next/head";
 import { Button } from "@mantine/core";
+import { withAuth } from "@/common/hocs";
 
 const AdminDashboardPage = () => {
   return (
@@ -17,4 +18,4 @@ const AdminDashboardPage = () => {
   );
 };
 
-export default AdminDashboardPage;
+export default withAuth(AdminDashboardPage, ["Admin", "Petugas"]);

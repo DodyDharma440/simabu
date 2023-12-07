@@ -1,7 +1,8 @@
 import React from "react";
 import Head from "next/head";
-import { UserContainer } from "@/user/components";
 import { Content } from "@/common/components";
+import { withAuth } from "@/common/hocs";
+import { UserContainer } from "@/user/components";
 
 const UserManagement = () => {
   return (
@@ -17,4 +18,4 @@ const UserManagement = () => {
   );
 };
 
-export default UserManagement;
+export default withAuth(UserManagement, "Admin");

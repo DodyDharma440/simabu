@@ -1,6 +1,7 @@
 import React from "react";
 import Head from "next/head";
 import { Content } from "@/common/components";
+import { withAuth } from "@/common/hocs";
 import { BooksContainer } from "@/books/components";
 
 const Books = () => {
@@ -17,4 +18,4 @@ const Books = () => {
   );
 };
 
-export default Books;
+export default withAuth(Books, "Admin");

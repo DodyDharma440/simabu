@@ -32,6 +32,7 @@ export interface ISidebarMenu {
   pathnames?: string[];
   count?: number;
   icon?: IconType;
+  roles?: string[];
 }
 
 export type ButtonActionType =

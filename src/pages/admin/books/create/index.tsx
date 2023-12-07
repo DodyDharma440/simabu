@@ -1,6 +1,7 @@
 import React from "react";
 import Head from "next/head";
 import { Content } from "@/common/components";
+import { withAuth } from "@/common/hocs";
 import { BookForm } from "@/books/components";
 
 const AddBook = () => {
@@ -17,4 +18,4 @@ const AddBook = () => {
   );
 };
 
-export default AddBook;
+export default withAuth(AddBook, "Admin");
