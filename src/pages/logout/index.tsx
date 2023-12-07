@@ -1,10 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import Cookies from "cookies";
 import dayjs from "dayjs";
+import { Loader } from "@/common/components";
 
 const LogoutPage = () => {
-  return <></>;
+  const { replace } = useRouter();
+
+  useEffect(() => {
+    replace("/login");
+    localStorage.removeItem("isLoggedIn");
+  }, [replace]);
+
+  return (
+    <Loader isLoading placeholderHeight="100vh">
+      <></>
+    </Loader>
+  );
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
@@ -17,10 +30,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   });
 
   return {
-    redirect: {
-      destination: "/login",
-      permanent: false,
-    },
+    props: {},
   };
 };
 

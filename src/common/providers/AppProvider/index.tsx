@@ -12,6 +12,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import "dayjs/locale/id";
+import UserProvider from "../UserProvider";
 
 dayjs.extend(RelativeTime);
 dayjs.extend(weekday);
@@ -69,7 +70,7 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       <NProgress />
       <ToggleColor />
       <Notifications position="top-right" />
-      {children}
+      <UserProvider>{children}</UserProvider>
       <ReactQueryDevtools />
     </QueryClientProvider>
   );

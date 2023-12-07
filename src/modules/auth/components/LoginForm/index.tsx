@@ -22,8 +22,16 @@ const LoginForm = () => {
   } = useForm<ILoginInput>();
 
   const { mutate: login, isPending } = useLogin({
-    onSuccess: () => {
-      router.replace("/admin/dashboard");
+    onSuccess: ({ data }) => {
+      const roleName = data.data.role.name;
+      const urls: Record<string, string> = {
+        Admin: "/admin/dashboard",
+        Petugas: "/admin/dashboard",
+        Mahasiswa: "/student/dashboard",
+      };
+      localStorage.setItem("isLoggedIn", "true");
+
+      router.replace(urls[roleName] || "/");
     },
   });
 

@@ -44,7 +44,10 @@ const handler = makeHandler((prisma) => ({
       path: "/",
     });
 
-    createResponse(res, { token });
+    createResponse(res, {
+      token,
+      role,
+    });
   },
 }));
 

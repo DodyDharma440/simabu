@@ -7,7 +7,9 @@ const handler = makeHandler((prisma) => ({
     const userData = decodeToken(req);
 
     try {
-      const user = await prisma.petugas.findUnique({
+      const key =
+        userData?.role?.name === "Mahasiswa" ? "mahasiswa" : "petugas";
+      const user = await prisma[key as "petugas"].findUnique({
         where: {
           userId: userData?.id,
         },

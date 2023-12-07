@@ -3,8 +3,6 @@ import { useRouter } from "next/router";
 import { Box, useMantineTheme } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { adminMenus } from "@/common/constants/layout";
-import { Loader } from "@/common/components";
-import { useGetProfile } from "@/auth/actions";
 import { Sidebar } from "..";
 
 type AdminLayoutProps = {
@@ -23,18 +21,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     ignoredLayout.includes(router.pathname) ||
     !router.pathname.startsWith("/admin");
 
-  const { isLoading, isRefetching, error } = useGetProfile(
-    {},
-    { enabled: !ignoredLayout.includes(router.pathname) }
-  );
-
   return (
-    <Loader
-      isLoading={isLoading}
-      isRefetching={isRefetching}
-      error={error}
-      placeholderHeight="100vh"
-    >
+    <>
       {isIgnoreLayout ? (
         children
       ) : (
@@ -55,7 +43,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           </Box>
         </>
       )}
-    </Loader>
+    </>
   );
 };
 

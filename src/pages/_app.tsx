@@ -11,7 +11,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         <title>SIMABU</title>
       </Head>
 
-      <ThemeProvider colorKey="akundes" theme={customTheme}>
+      <ThemeProvider colorKey="simabu" theme={customTheme}>
         <AppProvider>
           <AdminLayout>
             <Component {...pageProps} />

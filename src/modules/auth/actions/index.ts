@@ -14,7 +14,7 @@ export const useGetStudyPrograms = get<IStudyProgram[]>(
   ["study-program"]
 );
 
-export const useLogin = post<{ token: string }, ILoginInput>(
+export const useLogin = post<{ token: string; role: IRole }, ILoginInput>(
   ({ formValues }) => apiSimabu.post("/auth/login", formValues),
   []
 );

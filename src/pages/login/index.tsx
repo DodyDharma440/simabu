@@ -1,7 +1,8 @@
 import React from "react";
 import Head from "next/head";
 import { AuthContainer } from "@/auth/components";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, NextApiRequest } from "next";
+import { decodeToken } from "@/common/utils/auth";
 
 const Login = () => {
   return (
@@ -17,11 +18,15 @@ const Login = () => {
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const token = req.cookies[process.env["COOKIE_NAME"]!];
+  const decodedToken = decodeToken(req as NextApiRequest);
+
+  const role = decodedToken?.role?.name;
 
   if (token) {
     return {
       redirect: {
-        destination: "/admin/dashboard",
+        destination:
+          role === "Mahasiswa" ? "/student/dashboard" : "/admin/dashboard",
         permanent: false,
       },
     };

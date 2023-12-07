@@ -12,6 +12,7 @@ const Navbar = () => {
         width: `calc(${theme.breakpoints.xs} - 2px)`,
         boxShadow: theme.shadows.md,
         backgroundColor: isDark(theme) ? theme.colors.dark[8] : theme.white,
+        zIndex: 99,
       })}
       px="md"
       py="sm"
