@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { Loader } from "@/common/components";
 import { useGetProfile } from "@/auth/actions";
 
@@ -13,11 +14,13 @@ type UserProviderProps = {
 };
 
 const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
+  const { pathname } = useRouter();
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const { isLoading, isRefetching, error } = useGetProfile(
     {},
-    { enabled: isLoggedIn }
+    { enabled: isLoggedIn && pathname !== "/logout" }
   );
 
   useEffect(() => {

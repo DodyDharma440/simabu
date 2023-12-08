@@ -9,12 +9,24 @@ import { Loader } from "@/common/components";
 import { BorrowForm } from "@/borrow-return/components";
 import { useGetBook } from "@/books/actions";
 import { IBorrowInputUi } from "@/borrow-return/interfaces";
+import { useGetIsBorrowing } from "@/borrow-return/actions";
 
 type BorrowPageProps = {
   bookId: number;
 };
 
 const BorrowPage: NextPage<BorrowPageProps> = ({ bookId }) => {
+  const {
+    data: dataBorrow,
+    isLoading: isLoadingBorrow,
+    isRefetching: isRefetchingBorrow,
+    error: errorBorrow,
+  } = useGetIsBorrowing();
+
+  const isStillBorrowing = useMemo(() => {
+    return dataBorrow?.data.data || false;
+  }, [dataBorrow?.data.data]);
+
   const { data, isLoading, isRefetching, error } = useGetBook({ id: bookId });
   const formMethods = useForm<IBorrowInputUi>({
     defaultValues: {
@@ -36,21 +48,33 @@ const BorrowPage: NextPage<BorrowPageProps> = ({ bookId }) => {
 
   return (
     <MobileLayout>
-      <Loader isLoading={isLoading} isRefetching={isRefetching} error={error}>
-        <FormProvider {...formMethods}>
-          {book && book.stok < 1 ? (
-            <Center sx={{ flexDirection: "column" }} h="100px">
-              <Text align="center" mb="xs">
-                Stok buku sudah tidak tersedia.
-              </Text>
-              <Link href="/">
-                <Button variant="light">Kembali</Button>
-              </Link>
-            </Center>
-          ) : (
-            <BorrowForm />
-          )}
-        </FormProvider>
+      <Loader
+        isLoading={isLoading || isLoadingBorrow}
+        isRefetching={isRefetching || isRefetchingBorrow}
+        error={error || errorBorrow}
+      >
+        {isStillBorrowing ? (
+          <Center h="200px">
+            <Text align="center">
+              Saat ini masih ada peminjaman buku yang belum selesai.
+            </Text>
+          </Center>
+        ) : (
+          <FormProvider {...formMethods}>
+            {book && book.stok < 1 ? (
+              <Center sx={{ flexDirection: "column" }} h="100px">
+                <Text align="center" mb="xs">
+                  Stok buku sudah tidak tersedia.
+                </Text>
+                <Link href="/">
+                  <Button variant="light">Kembali</Button>
+                </Link>
+              </Center>
+            ) : (
+              <BorrowForm />
+            )}
+          </FormProvider>
+        )}
       </Loader>
     </MobileLayout>
   );

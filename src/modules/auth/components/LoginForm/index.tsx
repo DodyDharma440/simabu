@@ -31,7 +31,7 @@ const LoginForm = () => {
       };
       localStorage.setItem("isLoggedIn", "true");
 
-      router.replace(urls[roleName] || "/");
+      window.location.replace(urls[roleName] || "/");
     },
   });
 

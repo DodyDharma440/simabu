@@ -99,6 +99,7 @@ enum StatusPeminjaman {
   Pengajuan
   Diterima
   Ditolak
+  Selesai
 }
 
 model Peminjaman {
