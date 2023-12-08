@@ -22,8 +22,15 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
       mx="auto"
     >
       <Navbar />
-      <Box pt="60px">
-        {children}
+      <Box
+        pt="60px"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "100vh",
+        }}
+      >
+        <Box sx={{ flex: 1 }}>{children}</Box>
         <Footer
           height={60}
           display="flex"

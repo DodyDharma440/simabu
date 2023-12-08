@@ -7,3 +7,5 @@ export const periodDates: Record<BorrowPeriod, Date> = {
   "1 Minggu": dayjs().add(7, "days").toDate(),
   "2 Minggu": dayjs().add(14, "days").toDate(),
 };
+
+export const periodOptions = Object.keys(periodDates);

@@ -1,6 +1,7 @@
 import { periodDates } from "@/borrow-return/constants";
 import { IBorrowInput } from "@/borrow-return/interfaces";
 import {
+  createErrResponse,
   createResponse,
   paginationResponse,
   parseParams,
@@ -49,6 +50,14 @@ export default makeHandler((prisma) => ({
   POST: async (req, res) => {
     const body = req.body as IBorrowInput;
     const userData = decodeToken(req);
+    const student = await prisma.mahasiswa.findUnique({
+      where: { userId: userData?.id || 0 },
+    });
+
+    if (!student) {
+      createErrResponse(res, "Student not found", 404);
+      return;
+    }
 
     const borrowDate = new Date();
     const returnDate = periodDates[body.borrowPeriod];
@@ -61,7 +70,7 @@ export default makeHandler((prisma) => ({
 
     const borrow = await prisma.peminjaman.create({
       data: {
-        mahasiswaId: userData?.id || 0,
+        mahasiswaId: student.id,
         status: "Pengajuan",
         tanggalPeminjaman: borrowDate,
         tanggalKembali: returnDate,
@@ -75,6 +84,19 @@ export default makeHandler((prisma) => ({
     const borrowDetails = await prisma.detailPeminjaman.createMany({
       data: details,
     });
+
+    await prisma.$transaction(
+      books.map((book) => {
+        return prisma.buku.update({
+          where: {
+            id: book.id,
+          },
+          data: {
+            stok: book.stok - 1,
+          },
+        });
+      })
+    );
 
     createResponse(res, { ...borrow, details: borrowDetails }, 201);
   },

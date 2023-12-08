@@ -8,7 +8,6 @@ const adminOnlyEndpoints = [
   "/user/petugas",
   "/user/mahasiswa",
   "/book-category",
-  "/book",
 ];
 
 export async function middleware(req: NextRequest) {

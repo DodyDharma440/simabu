@@ -67,9 +67,7 @@ export const useAction = <T = any, P = any, R = ApiResponse<T>>(
         const errRes = axiosError.response?.data?.error;
         let message = errRes || error.message || "Terjadi kesalahan";
         if (errRes instanceof Object) {
-          if (errRes?.name === "PrismaClientValidationError") {
-            message = "Prisma Client Error";
-          }
+          message = errRes?.name || "Prisma Client Error";
         }
 
         notifications.show({

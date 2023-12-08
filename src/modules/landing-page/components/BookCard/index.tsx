@@ -32,7 +32,7 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
         <Box py="4px" px="2px">
           <Text weight="700">{book.judul}</Text>
           <Text size="xs" color="dimmed">
-            {book.penerbit}
+            {book.penerbit} &bull; {book.jumlahHalaman} Halaman
           </Text>
         </Box>
       </Box>
