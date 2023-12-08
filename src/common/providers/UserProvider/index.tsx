@@ -1,6 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { Loader } from "@/common/components";
 import { useGetProfile } from "@/auth/actions";
+
+type UserCtx = {
+  isLoggedIn: boolean;
+};
+
+const UserContext = createContext<UserCtx>({ isLoggedIn: false });
 
 type UserProviderProps = {
   children: React.ReactNode;
@@ -19,15 +25,19 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   }, []);
 
   return (
-    <Loader
-      isLoading={isLoading}
-      isRefetching={isRefetching}
-      error={error}
-      placeholderHeight="100vh"
-    >
-      {children}
-    </Loader>
+    <UserContext.Provider value={{ isLoggedIn }}>
+      <Loader
+        isLoading={isLoading}
+        isRefetching={isRefetching}
+        error={error}
+        placeholderHeight="100vh"
+      >
+        {children}
+      </Loader>
+    </UserContext.Provider>
   );
 };
+
+export const useUserContext = () => useContext(UserContext);
 
 export default UserProvider;

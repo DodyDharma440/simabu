@@ -1,6 +1,7 @@
 import React from "react";
-import { Box } from "@mantine/core";
+import { Box, Footer, Text } from "@mantine/core";
 import { isDark } from "@/common/utils/theme";
+import Navbar from "./Navbar";
 
 type MobileLayoutProps = {
   children: React.ReactNode;
@@ -11,7 +12,8 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
     <Box
       component="main"
       sx={(theme) => ({
-        width: theme.breakpoints.xs,
+        width: "100%",
+        maxWidth: theme.breakpoints.xs,
         borderLeft: "1px solid",
         borderRight: "1px solid",
         borderColor: theme.colors.gray[isDark(theme) ? 8 : 3],
@@ -19,7 +21,23 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
       })}
       mx="auto"
     >
-      {children}
+      <Navbar />
+      <Box pt="60px">
+        {children}
+        <Footer
+          height={60}
+          display="flex"
+          sx={{
+            alignItems: "center",
+            width: "100%",
+            justifyContent: "center",
+          }}
+        >
+          <Text size="xs" color="dimmed" align="center">
+            Simabu &copy; 2023. Kelompok 2 - IF Malam
+          </Text>
+        </Footer>
+      </Box>
     </Box>
   );
 };

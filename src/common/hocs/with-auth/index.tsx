@@ -1,6 +1,7 @@
 import { useUserProfile } from "@/auth/hooks";
 import { Loader } from "@/common/components";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export const withAuth = <P extends Object = {}>(
   WrappedComponent: React.ComponentType<P>,
@@ -10,9 +11,13 @@ export const withAuth = <P extends Object = {}>(
     const { replace } = useRouter();
     const { userData } = useUserProfile();
 
-    if (!userData) {
-      replace("/");
+    useEffect(() => {
+      if (!userData) {
+        replace("/");
+      }
+    }, [replace, userData]);
 
+    if (!userData) {
       return (
         <Loader screenLoader isLoading={true}>
           <></>
