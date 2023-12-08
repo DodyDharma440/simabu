@@ -1,6 +1,7 @@
 import React from "react";
 import { GetServerSideProps, NextPage } from "next";
 import { MobileLayout } from "@/common/layouts";
+import { withAuth } from "@/common/hocs";
 
 type BorrowPageProps = {
   bookId: number;
@@ -31,4 +32,4 @@ export const getServerSideProps: GetServerSideProps<BorrowPageProps> = async ({
   };
 };
 
-export default BorrowPage;
+export default withAuth(BorrowPage, ["Mahasiswa"]);

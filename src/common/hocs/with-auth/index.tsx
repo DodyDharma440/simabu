@@ -1,5 +1,6 @@
 import { useUserProfile } from "@/auth/hooks";
 import { Loader } from "@/common/components";
+import { useUserContext } from "@/common/providers/UserProvider";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
@@ -9,15 +10,16 @@ export const withAuth = <P extends Object = {}>(
 ) => {
   const Component = (props: P) => {
     const { replace } = useRouter();
+    const { isLoggedIn } = useUserContext();
     const { userData } = useUserProfile();
 
     useEffect(() => {
-      if (!userData) {
+      if (!isLoggedIn) {
         replace("/");
       }
-    }, [replace, userData]);
+    }, [isLoggedIn, replace]);
 
-    if (!userData) {
+    if (!isLoggedIn) {
       return (
         <Loader screenLoader isLoading={true}>
           <></>
@@ -27,7 +29,7 @@ export const withAuth = <P extends Object = {}>(
 
     if (role) {
       if (typeof role === "string") {
-        if (userData.user?.role?.name !== role) {
+        if (userData?.user?.role?.name !== role) {
           replace("/");
 
           return (
@@ -37,7 +39,7 @@ export const withAuth = <P extends Object = {}>(
           );
         }
       } else {
-        if (!role.includes(userData.user?.role?.name || "")) {
+        if (!role.includes(userData?.user?.role?.name || "")) {
           replace("/");
 
           return (

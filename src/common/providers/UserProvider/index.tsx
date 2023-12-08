@@ -14,6 +14,7 @@ type UserProviderProps = {
 
 const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   const { isLoading, isRefetching, error } = useGetProfile(
     {},
     { enabled: isLoggedIn }
@@ -22,17 +23,18 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   useEffect(() => {
     const isLogin = localStorage.getItem("isLoggedIn") || "false";
     setIsLoggedIn(isLogin === "true");
+    setIsLoaded(true);
   }, []);
 
   return (
-    <UserContext.Provider value={{ isLoggedIn }}>
+    <UserContext.Provider value={{ isLoggedIn: isLoggedIn }}>
       <Loader
         isLoading={isLoading}
         isRefetching={isRefetching}
         error={error}
         placeholderHeight="100vh"
       >
-        {children}
+        {isLoaded ? <>{children}</> : null}
       </Loader>
     </UserContext.Provider>
   );
