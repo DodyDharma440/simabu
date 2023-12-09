@@ -4,6 +4,7 @@ import { useUserProfile } from "@/auth/hooks";
 import { IBook } from "@/books/interfaces";
 import { Badge, Box, Text } from "@mantine/core";
 import { opacityColor } from "@/common/utils/theme";
+import Image from "next/image";
 
 type BookCardProps = {
   book: IBook;
@@ -28,6 +29,14 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
           <Badge sx={{ position: "absolute", top: 0, left: 0 }} ml="xs" mt="xs">
             {book.kategori?.nama}
           </Badge>
+          {book.imageUrl ? (
+            <Image
+              src={book.imageUrl}
+              alt={`${book.judul} Cover`}
+              fill
+              style={{ objectFit: "cover" }}
+            />
+          ) : null}
         </Box>
         <Box py="4px" px="2px">
           <Text weight="700">{book.judul}</Text>

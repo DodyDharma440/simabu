@@ -1,5 +1,4 @@
 import React, { useCallback } from "react";
-import { useRouter } from "next/router";
 import {
   Button,
   Center,
@@ -8,13 +7,12 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { ILoginInput } from "../../interfaces";
 import { useLogin } from "../../actions";
 
 const LoginForm = () => {
-  const router = useRouter();
-
   const {
     register,
     handleSubmit,
@@ -71,6 +69,11 @@ const LoginForm = () => {
           <Button type="submit" loading={isPending}>
             Login
           </Button>
+          <Link href="/">
+            <Button variant="subtle" fullWidth>
+              Kembali
+            </Button>
+          </Link>
         </Stack>
       </form>
     </Center>

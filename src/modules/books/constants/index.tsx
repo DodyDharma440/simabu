@@ -92,6 +92,7 @@ export const booksCols = ({
                 fill
                 src={row.original.imageUrl}
                 alt={`${row.original.judul} Thumb`}
+                style={{ objectFit: "cover" }}
               />
             ) : null}
           </Box>

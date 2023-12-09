@@ -10,9 +10,9 @@ import { useHotkeys } from "@mantine/hooks";
 import { NavigationProgress, nprogress } from "@mantine/nprogress";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import UserProvider from "../UserProvider";
 
 import "dayjs/locale/id";
-import UserProvider from "../UserProvider";
 
 dayjs.extend(RelativeTime);
 dayjs.extend(weekday);

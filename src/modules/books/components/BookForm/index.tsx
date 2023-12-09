@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import {
   Box,
   Button,
@@ -19,13 +19,14 @@ import {
 import { YearPickerInput } from "@mantine/dates";
 import { generateOptions } from "@/common/utils/data";
 import { opacityColor } from "@/common/utils/theme";
+import { divideBasicData } from "@/common/utils/react-query";
+import { useUploadImage } from "@/common/actions/imagekit";
 import {
   useCreateBook,
   useGetBookCategories,
   useUpdateBook,
 } from "@/books/actions";
 import { IBook, IBookInputUi } from "@/books/interfaces";
-import { divideBasicData } from "@/common/utils/react-query";
 
 type BookFormProps = {
   editId?: number;
@@ -34,6 +35,9 @@ type BookFormProps = {
 
 const BookForm: React.FC<BookFormProps> = ({ editId, bookData }) => {
   const { push } = useRouter();
+
+  const { mutateAsync: uploadImage, isPending: isLoadingUpload } =
+    useUploadImage();
 
   const { mutate: createBook, isPending: isLoadingCreate } = useCreateBook({
     onSuccess: () => push("/admin/books"),
@@ -58,19 +62,50 @@ const BookForm: React.FC<BookFormProps> = ({ editId, bookData }) => {
     setValue,
     formState: { errors },
   } = useForm<IBookInputUi>();
+  const defaultImageUrl = useWatch({ control, name: "imageUrl" });
 
   const submitHandler = useCallback(
     (values: IBookInputUi) => {
       const { imageFile, tahunTerbitDate, ...formValues } = values;
       formValues.tahunTerbit = tahunTerbitDate?.getFullYear() || 0;
 
+      const makeUploadFd = () => {
+        const uploadFd = new FormData();
+        if (imageFile) uploadFd.append("file", imageFile);
+        uploadFd.append("fileName", `${formValues.judul} Cover`);
+        return uploadFd;
+      };
+
       if (editId) {
-        updateBook({ formValues, id: editId });
+        if (imageFile) {
+          const uploadFd = makeUploadFd();
+          uploadImage(
+            { formValues: uploadFd },
+            {
+              onSuccess: (res) => {
+                formValues.imageUrl = res.data.url;
+                updateBook({ formValues, id: editId });
+              },
+            }
+          );
+        } else {
+          updateBook({ formValues, id: editId });
+        }
       } else {
-        createBook({ formValues });
+        const uploadFd = makeUploadFd();
+
+        uploadImage(
+          { formValues: uploadFd },
+          {
+            onSuccess: (res) => {
+              formValues.imageUrl = res.data.url;
+              createBook({ formValues });
+            },
+          }
+        );
       }
     },
-    [createBook, editId, updateBook]
+    [createBook, editId, updateBook, uploadImage]
   );
 
   useEffect(() => {
@@ -80,7 +115,7 @@ const BookForm: React.FC<BookFormProps> = ({ editId, bookData }) => {
       setValue("tahunTerbitDate", yearDate);
 
       const {
-        divided: { kategori, imageUrl, ...divided },
+        divided: { kategori, ...divided },
       } = divideBasicData(bookData);
 
       Object.entries(divided).forEach(([key, value]) => {
@@ -249,12 +284,22 @@ const BookForm: React.FC<BookFormProps> = ({ editId, bookData }) => {
                 control={control}
                 name="imageFile"
                 rules={{
-                  required: "Cover Buku harus diupload",
+                  required: !defaultImageUrl
+                    ? "Cover Buku harus diupload"
+                    : false,
+                  validate: (val) => {
+                    if (val) {
+                      const sizeMB = val.size / 1024 / 1024;
+                      if (sizeMB > 1) {
+                        return "Ukuran maksimal file adalah 1MB";
+                      }
+                    }
+                  },
                 }}
                 render={({ field }) => {
                   const imageUrl = field.value
                     ? URL.createObjectURL(field.value)
-                    : null;
+                    : defaultImageUrl;
 
                   return (
                     <>
@@ -268,6 +313,8 @@ const BookForm: React.FC<BookFormProps> = ({ editId, bookData }) => {
                             theme.colors.gray[8],
                             10
                           ),
+                          borderRadius: theme.radius.md,
+                          overflow: "hidden",
                         })}
                       >
                         {imageUrl ? (
@@ -275,7 +322,7 @@ const BookForm: React.FC<BookFormProps> = ({ editId, bookData }) => {
                             src={imageUrl}
                             fill
                             alt="Thumb"
-                            style={{ objectFit: "contain" }}
+                            style={{ objectFit: "cover" }}
                           />
                         ) : null}
                       </Box>
@@ -285,6 +332,7 @@ const BookForm: React.FC<BookFormProps> = ({ editId, bookData }) => {
                         onChange={(e) =>
                           field.onChange(e.target.files?.[0] || null)
                         }
+                        accept="image/jpg,image/png,image/jpeg"
                         value=""
                         id="thumb-input"
                         style={{ display: "none" }}
@@ -314,13 +362,16 @@ const BookForm: React.FC<BookFormProps> = ({ editId, bookData }) => {
         <Divider my="md" />
         <Group position="right">
           <Button
-            disabled={isLoadingCreate || isLoadingUpdate}
+            disabled={isLoadingCreate || isLoadingUpdate || isLoadingUpload}
             color="red"
             onClick={() => push("/admin/books")}
           >
             Kembali
           </Button>
-          <Button type="submit" loading={isLoadingCreate || isLoadingUpdate}>
+          <Button
+            type="submit"
+            loading={isLoadingCreate || isLoadingUpdate || isLoadingUpload}
+          >
             Simpan
           </Button>
         </Group>

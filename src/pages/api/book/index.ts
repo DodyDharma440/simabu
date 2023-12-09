@@ -67,8 +67,6 @@ export default makeHandler((prisma) => ({
       where: { userId: token?.id },
     });
 
-    body.imageUrl = req.imageUrl;
-
     const book = await prisma.buku.create({
       data: {
         ...body,

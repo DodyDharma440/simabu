@@ -12,6 +12,7 @@ import {
   Text,
   Title,
 } from "@mantine/core";
+import Image from "next/image";
 import React from "react";
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 import { HiOutlinePlus, HiOutlineTrash } from "react-icons/hi";
@@ -43,7 +44,16 @@ const SummaryBooks = () => {
                   position: "relative",
                   borderRadius: theme.radius.md,
                 })}
-              ></Box>
+              >
+                {field.imageUrl ? (
+                  <Image
+                    fill
+                    src={field.imageUrl}
+                    alt={`${field.judul} Cover`}
+                    style={{ objectFit: "cover" }}
+                  />
+                ) : null}
+              </Box>
 
               <Stack spacing="0px" sx={{ flex: 1 }}>
                 <Badge w="fit-content" mb="4px">
