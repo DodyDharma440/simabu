@@ -53,28 +53,28 @@ const BorrowPage: NextPage<BorrowPageProps> = ({ bookId }) => {
         isRefetching={isRefetching || isRefetchingBorrow}
         error={error || errorBorrow}
       >
-        {/* {isStillBorrowing ? (
+        {isStillBorrowing ? (
           <Center h="200px">
             <Text align="center">
               Saat ini masih ada peminjaman buku yang belum selesai.
             </Text>
           </Center>
-        ) : ( */}
-        <FormProvider {...formMethods}>
-          {book && book.stok < 1 ? (
-            <Center sx={{ flexDirection: "column" }} h="100px">
-              <Text align="center" mb="xs">
-                Stok buku sudah tidak tersedia.
-              </Text>
-              <Link href="/">
-                <Button variant="light">Kembali</Button>
-              </Link>
-            </Center>
-          ) : (
-            <BorrowForm />
-          )}
-        </FormProvider>
-        {/* )} */}
+        ) : (
+          <FormProvider {...formMethods}>
+            {book && book.stok < 1 ? (
+              <Center sx={{ flexDirection: "column" }} h="100px">
+                <Text align="center" mb="xs">
+                  Stok buku sudah tidak tersedia.
+                </Text>
+                <Link href="/">
+                  <Button variant="light">Kembali</Button>
+                </Link>
+              </Center>
+            ) : (
+              <BorrowForm />
+            )}
+          </FormProvider>
+        )}
       </Loader>
     </MobileLayout>
   );
