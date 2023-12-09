@@ -54,6 +54,25 @@ const HeroSection = () => {
       </Box>
 
       <Box
+        sx={(theme) => ({
+          position: "absolute",
+          width: 60,
+          height: 60,
+          top: theme.spacing.md,
+          left: theme.spacing.md,
+        })}
+      >
+        <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
+          <Image
+            src="/images/png/logo.png"
+            alt="Logo"
+            fill
+            style={{ objectFit: "contain" }}
+          />
+        </Box>
+      </Box>
+
+      <Box
         sx={{
           position: "absolute",
           inset: 0,

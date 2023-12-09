@@ -8,12 +8,7 @@ import { makeHandler } from "@/common/utils/api-route";
 export default makeHandler((prisma) => ({
   GET: async (req, res) => {
     const status = req.query["status"];
-    const searchFields = [
-      "mahasiswa.nama",
-      "mahasiswa.nim",
-      "tanggalPeminjaman",
-      "tanggalKembali",
-    ];
+    const searchFields = ["mahasiswa.nama", "mahasiswa.nim"];
     const searchParams = parseParams(req, "search", {
       search: { fields: searchFields },
     });

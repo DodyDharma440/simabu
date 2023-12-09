@@ -65,11 +65,19 @@ const Content: React.FC<ContentProps> = ({
             style={{ flex: 1, color: "inherit", textDecoration: "none" }}
           >
             {isSidebarOpen ? (
-              <Box sx={{ flex: 1 }}>
+              <Group spacing="xs" sx={{ flex: 1 }}>
+                <Box sx={{ position: "relative", width: 40, height: 40 }}>
+                  <Image
+                    fill
+                    style={{ objectFit: "contain" }}
+                    src="/images/png/logo.png"
+                    alt="Logo"
+                  />
+                </Box>
                 <Text size={24} weight="600" sx={{ lineHeight: 1.3 }}>
                   SIMABU
                 </Text>
-              </Box>
+              </Group>
             ) : null}
           </Link>
           <UnstyledButton onClick={onClose}>
