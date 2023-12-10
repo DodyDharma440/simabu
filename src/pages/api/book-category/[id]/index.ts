@@ -26,7 +26,7 @@ export default makeHandler((prisma) => ({
     }
 
     const category = await prisma.kategori.update({
-      data: body,
+      data: { ...body, updatedAt: new Date() },
       where: { id: Number(id) },
     });
 

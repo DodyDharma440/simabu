@@ -1,5 +1,6 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Alert,
   Badge,
@@ -12,15 +13,18 @@ import {
   Text,
   Title,
 } from "@mantine/core";
+import dayjs from "dayjs";
+import { useDisclosure } from "@mantine/hooks";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-import { Loader } from "@/common/components";
-import { useGetCurrentBorrowSubmission } from "@/borrow-return/actions";
+import { AlertDialog, Loader } from "@/common/components";
+import {
+  useCreateBookReturn,
+  useGetCurrentBorrowSubmission,
+} from "@/borrow-return/actions";
 import { statusColors } from "@/borrow-return/constants";
 import { BorrowStatus } from "@/borrow-return/interfaces";
 import { HiOutlineCheckCircle } from "react-icons/hi2";
-import dayjs from "dayjs";
 import { opacityColor } from "@/common/utils/theme";
-import Image from "next/image";
 
 type DetailGroupProps = {
   label: React.ReactNode;
@@ -70,9 +74,23 @@ const StudentSubmission = () => {
   const { data, isLoading, isRefetching, error } =
     useGetCurrentBorrowSubmission();
 
+  const [isOpen, { open, close }] = useDisclosure();
+  const { mutate: createBookReturn, isPending: isLoadingCreate } =
+    useCreateBookReturn({
+      onSuccess: close,
+    });
+
   const submission = useMemo(() => {
     return data?.data.data;
   }, [data?.data.data]);
+
+  const handleBookReturn = useCallback(() => {
+    createBookReturn({
+      formValues: {
+        peminjamanId: submission?.id || 0,
+      },
+    });
+  }, [createBookReturn, submission?.id]);
 
   return (
     <Loader isLoading={isLoading} isRefetching={isRefetching} error={error}>
@@ -80,7 +98,19 @@ const StudentSubmission = () => {
         <>
           {["Diterima", "Ditolak"].includes(submission.status) ? (
             <Box mb="md">
-              {alerts[submission.status as "Diterima" | "Ditolak"]}
+              {submission.isBookReturnSubmission ? (
+                <Alert
+                  variant="filled"
+                  icon={<HiOutlineCheckCircle />}
+                  title="Pengajuan pengembalian"
+                >
+                  Pengajuan pengembalian sudah dilakukan. Silahkan pergi ke
+                  perpustakaan dengan membawa buku yang dipinjam agar dapat
+                  dikonfirmasi oleh petugas perpustakaan.
+                </Alert>
+              ) : (
+                <>{alerts[submission.status as "Diterima" | "Ditolak"]}</>
+              )}
             </Box>
           ) : null}
           <Card p="md" radius="md" withBorder>
@@ -173,12 +203,24 @@ const StudentSubmission = () => {
                 );
               })}
             </Stack>
-            {submission.status === "Diterima" ? (
+            {submission.status === "Diterima" &&
+            !submission.isBookReturnSubmission ? (
               <>
                 <Divider my="sm" />
                 <Group position="right">
-                  <Button>Ajukan Pengembalian</Button>
+                  <Button onClick={open}>Ajukan Pengembalian</Button>
                 </Group>
+                <AlertDialog
+                  isOpen={isOpen}
+                  onClose={close}
+                  title="Ajukan pengembalian"
+                  message="Apakah Anda yakin untuk mengajukan pengembalian buku ini?"
+                  cancelButtonText="Batal"
+                  confirmButtonText="Ajukan"
+                  onCancel={close}
+                  onConfirm={handleBookReturn}
+                  confirmButtonProps={{ loading: isLoadingCreate }}
+                />
               </>
             ) : null}
           </Card>

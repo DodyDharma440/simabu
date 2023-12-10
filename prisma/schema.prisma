@@ -130,7 +130,7 @@ model DetailPeminjaman {
 
 model Pengembalian {
   id                  Int        @id @default(autoincrement())
-  tanggalPengembalian DateTime
+  tanggalPengembalian DateTime?
   petugasPenerima     Petugas?   @relation(fields: [petugasId], references: [id])
   petugasId           Int?
   denda               Float?

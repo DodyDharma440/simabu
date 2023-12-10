@@ -89,19 +89,6 @@ export default makeHandler((prisma) => ({
       data: details,
     });
 
-    await prisma.$transaction(
-      books.map((book) => {
-        return prisma.buku.update({
-          where: {
-            id: book.id,
-          },
-          data: {
-            stok: book.stok - 1,
-          },
-        });
-      })
-    );
-
     createResponse(res, { ...borrow, details: borrowDetails }, 201);
   },
 }));

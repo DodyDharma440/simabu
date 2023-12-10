@@ -38,6 +38,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
             alignItems: "center",
             width: "100%",
             justifyContent: "center",
+            zIndex: 100,
           }}
         >
           <Text size="xs" color="dimmed" align="center">

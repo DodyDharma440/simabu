@@ -11,7 +11,10 @@ export default makeHandler((prisma) => ({
 
     const userData = decodeToken(req);
 
-    const borrow = await prisma.peminjaman.findUnique({ where: { id } });
+    const borrow = await prisma.peminjaman.findUnique({
+      where: { id },
+      include: { DetailPeminjaman: true },
+    });
 
     if (!borrow) {
       createErrResponse(res, { message: "Data not found" }, 404);
@@ -39,6 +42,27 @@ export default makeHandler((prisma) => ({
         tanggalKembali: returnDate,
       },
     });
+
+    if (body.status === "Diterima") {
+      const books = await prisma.buku.findMany({
+        where: {
+          id: { in: borrow.DetailPeminjaman.map((d) => d.bukuId) },
+        },
+      });
+      await prisma.$transaction(
+        books.map((book) => {
+          return prisma.buku.update({
+            where: {
+              id: book.id,
+            },
+            data: {
+              stok: book.stok - 1,
+              updatedAt: new Date(),
+            },
+          });
+        })
+      );
+    }
 
     return createResponse(res, updatedBorrow);
   },

@@ -32,15 +32,22 @@ export interface IBorrow extends BasicData {
   tanggalPeminjaman: string | null;
   periode: string;
   tanggalKembali: string | null;
+  isBookReturnSubmission: boolean;
   DetailPeminjaman: IBorrowDetail[];
   Pengembalian?: IBookReturn;
 }
 
 export interface IBookReturn extends BasicData {
-  tanggalPengembalian: string;
+  tanggalPengembalian: string | null;
   petugasPenerima?: IOfficer;
-  petugasId: number;
+  petugasId: number | null;
+  petugas?: IOfficer | null;
   denda: number | null;
   peminjamanId: number;
   peminjaman?: IBorrow;
+  isApproved: boolean;
 }
+
+export interface IBookReturnInput extends Pick<IBookReturn, "peminjamanId"> {}
+
+export interface IBookReturnConfirmInput extends Pick<IBookReturn, "denda"> {}

@@ -15,7 +15,10 @@ export default makeHandler((prisma) => ({
     }
 
     const book = await prisma.buku.update({
-      data: { stok: body.stok },
+      data: {
+        stok: body.stok,
+        updatedAt: new Date(),
+      },
       where: { id },
     });
 

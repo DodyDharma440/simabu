@@ -1,13 +1,30 @@
 import { get, patch, post } from "@/common/utils/react-query";
-import { IBorrow, IBorrowApprovalInput, IBorrowInput } from "../interfaces";
+import {
+  IBookReturn,
+  IBookReturnInput,
+  IBorrow,
+  IBorrowApprovalInput,
+  IBorrowInput,
+} from "../interfaces";
 import { apiSimabu } from "@/common/configs/api";
-import { BORROWS, CURRENT_SUBMISSION, IS_BORROWING } from "../constants";
+import {
+  BOOK_RETURNS,
+  BORROWS,
+  CURRENT_SUBMISSION,
+  IS_BORROWING,
+} from "../constants";
 import { PaginationResponse } from "@/common/interfaces/api";
 
 export const useBorrowBook = post<any, IBorrowInput>(
   ({ formValues }) => apiSimabu.post("/borrow/student", formValues),
   [],
   { successMessage: "Pengajuan peminjaman berhasil dilakukan" }
+);
+
+export const useCreateBookReturn = post<IBookReturn, IBookReturnInput>(
+  ({ formValues }) => apiSimabu.post("/book-return/student", formValues),
+  [CURRENT_SUBMISSION],
+  { successMessage: "Pengajuan pengembalian berhasil dilakukan" }
 );
 
 export const useGetIsBorrowing = get<boolean>(
@@ -30,4 +47,12 @@ export const useBorrowApproval = patch<any, IBorrowApprovalInput>(
 export const useGetCurrentBorrowSubmission = get<IBorrow>(
   () => apiSimabu.get("/borrow/student/submission"),
   [CURRENT_SUBMISSION]
+);
+
+export const useGetBookReturns = get<PaginationResponse<IBookReturn>>(
+  (args, ctx) =>
+    apiSimabu.get(`/book-return${args?.urlParams || ""}`, {
+      signal: ctx?.signal,
+    }),
+  [BOOK_RETURNS]
 );

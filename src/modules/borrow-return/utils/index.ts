@@ -12,7 +12,12 @@ export const checkIsBorrowing = async (
   });
 
   const count = await prisma.pengembalian.count({
-    where: { AND: borroweds.map((b) => ({ peminjamanId: b.id })) },
+    where: {
+      AND: borroweds.map((b) => ({ peminjamanId: b.id })),
+      petugasId: {
+        not: null,
+      },
+    },
   });
 
   return borroweds.length && count === 0;

@@ -1,11 +1,18 @@
 import dayjs from "dayjs";
-import { BorrowPeriod, BorrowStatus, IBorrow } from "../interfaces";
+import {
+  BorrowPeriod,
+  BorrowStatus,
+  IBookReturn,
+  IBorrow,
+} from "../interfaces";
 import { createTableColumns } from "@/common/utils/react-table";
 import { Badge, Button, Group, Text } from "@mantine/core";
+import { currencyFormat } from "@/common/utils/number-format";
 
 export const IS_BORROWING = "is-borrowing";
 export const BORROWS = "borrows";
 export const CURRENT_SUBMISSION = "current-submission";
+export const BOOK_RETURNS = "book-returns";
 
 export const periodDates: Record<BorrowPeriod, Date> = {
   "3 Hari": dayjs().add(3, "days").toDate(),
@@ -40,11 +47,6 @@ export const statusColors: Record<BorrowStatus, string> = {
 type BorrowColArgs = {
   onApprove: (data: IBorrow, approval: "reject" | "approve") => void;
   onDetail: (data: IBorrow) => void;
-};
-
-const getPeriodFromDate = (start: string, end: string) => {
-  const distance = Math.abs(dayjs(start).diff(dayjs(end), "days")) + 1;
-  return periodDayLabels[distance];
 };
 
 export const borrowsColumns = ({ onApprove, onDetail }: BorrowColArgs) =>
@@ -124,3 +126,58 @@ export const borrowsColumns = ({ onApprove, onDetail }: BorrowColArgs) =>
       },
     ];
   });
+
+type BookReturnColArgs = {
+  onConfirm: (data: IBookReturn) => void;
+};
+
+export const bookReturnsColumns = ({ onConfirm }: BookReturnColArgs) =>
+  createTableColumns<IBookReturn>(({ accessor }) => [
+    accessor("peminjaman.mahasiswa.nama", {
+      header: "Nama Mahasiswa",
+    }),
+    accessor((row) => dayjs(row.createdAt).format("DD MMM YYYY"), {
+      header: "Tanggal Pengajuan",
+      id: "tanggal",
+    }),
+    accessor(
+      (row) =>
+        row.tanggalPengembalian
+          ? dayjs(row.tanggalPengembalian).format("DD MMM YYYY")
+          : "-",
+      {
+        header: "Tanggal Konfirmasi",
+        id: "tanggal_konfirmasi",
+      }
+    ),
+    accessor((row) => (row.denda ? currencyFormat(row.denda) : "-"), {
+      header: "Denda",
+      id: "denda",
+    }),
+    {
+      header: "Peminjaman",
+      id: "peminjaman",
+      justifyHeader: "center",
+      justifyBody: "center",
+      cell: ({ row }) => {
+        return (
+          <Button compact onClick={() => onConfirm(row.original)}>
+            Lihat detail
+          </Button>
+        );
+      },
+    },
+    {
+      header: "Aksi",
+      id: "action",
+      justifyHeader: "center",
+      justifyBody: "center",
+      cell: ({ row }) => {
+        return (
+          <Button compact color="green" onClick={() => onConfirm(row.original)}>
+            Konfirmasi
+          </Button>
+        );
+      },
+    },
+  ]);

@@ -40,6 +40,18 @@ export default makeHandler((prisma) => ({
       },
     });
 
-    return createResponse(res, submission);
+    const bookSubmission = await prisma.pengembalian.findUnique({
+      where: { peminjamanId: submission?.id || 0 },
+    });
+
+    return createResponse(
+      res,
+      submission
+        ? {
+            ...submission,
+            isBookReturnSubmission: Boolean(bookSubmission),
+          }
+        : null
+    );
   },
 }));
