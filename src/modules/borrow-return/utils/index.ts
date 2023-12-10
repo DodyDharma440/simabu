@@ -15,5 +15,5 @@ export const checkIsBorrowing = async (
     where: { AND: borroweds.map((b) => ({ peminjamanId: b.id })) },
   });
 
-  return count === 0;
+  return borroweds.length && count === 0;
 };

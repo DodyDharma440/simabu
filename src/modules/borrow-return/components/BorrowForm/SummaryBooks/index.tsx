@@ -14,19 +14,23 @@ import {
 } from "@mantine/core";
 import Image from "next/image";
 import React from "react";
-import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
+import { useDisclosure } from "@mantine/hooks";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import { HiOutlinePlus, HiOutlineTrash } from "react-icons/hi";
+import MoreBooks from "../MoreBooks";
 
 const SummaryBooks = () => {
   const { control } = useFormContext<IBorrowInputUi>();
   const { fields, remove, append } = useFieldArray({ control, name: "books" });
+
+  const [isOpen, { open, close }] = useDisclosure();
 
   return (
     <Card withBorder px="md" py="sm" radius="md">
       <Box>
         <Title order={5}>Buku yang dipinjam</Title>
         <Text size="xs" color="dimmed">
-          Anda hanya bisa meminjam maksimal 3 buku
+          Anda hanya bisa meminjam maksimal 2 buku
         </Text>
       </Box>
       <Divider my="xs" />
@@ -69,7 +73,12 @@ const SummaryBooks = () => {
               </Stack>
 
               {fields.length > 1 ? (
-                <ActionIcon color="red" size="lg" variant="light">
+                <ActionIcon
+                  onClick={() => remove(index)}
+                  color="red"
+                  size="lg"
+                  variant="light"
+                >
                   <HiOutlineTrash />
                 </ActionIcon>
               ) : null}
@@ -77,11 +86,23 @@ const SummaryBooks = () => {
           </React.Fragment>
         );
       })}
-      {fields.length < 3 ? (
-        <Button leftIcon={<HiOutlinePlus />} fullWidth mt="md" variant="light">
+      {fields.length < 2 ? (
+        <Button
+          leftIcon={<HiOutlinePlus />}
+          onClick={open}
+          fullWidth
+          mt="md"
+          variant="light"
+        >
           Tambahkan Buku Lainnya
         </Button>
       ) : null}
+
+      <MoreBooks
+        isOpen={isOpen}
+        onClose={close}
+        onSelect={(book) => append(book)}
+      />
     </Card>
   );
 };

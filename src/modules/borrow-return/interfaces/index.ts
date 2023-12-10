@@ -29,8 +29,9 @@ export interface IBorrow extends BasicData {
   mahasiswa?: IStudent;
   petugasId: number | null;
   petugas?: IOfficer | null;
-  tanggalPeminjaman: string;
-  tanggalKembali: string;
+  tanggalPeminjaman: string | null;
+  periode: string;
+  tanggalKembali: string | null;
   DetailPeminjaman: IBorrowDetail[];
   Pengembalian?: IBookReturn;
 }

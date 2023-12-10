@@ -53,17 +53,14 @@ export const borrowsColumns = ({ onApprove, onDetail }: BorrowColArgs) =>
       accessor("mahasiswa.nama", {
         header: "Nama Mahasiswa",
       }),
-      accessor((row) => dayjs(row.tanggalPeminjaman).format("DD MMM YYYY"), {
+      accessor((row) => dayjs(row.createdAt).format("DD MMM YYYY"), {
         header: "Tanggal Pengajuan",
         id: "tanggal",
       }),
-      accessor(
-        (row) => getPeriodFromDate(row.tanggalPeminjaman, row.tanggalKembali),
-        {
-          header: "Periode Peminjaman",
-          id: "periode",
-        }
-      ),
+      accessor("periode", {
+        header: "Periode Peminjaman",
+        id: "periode",
+      }),
       accessor("status", {
         header: "Status",
         justifyBody: "center",

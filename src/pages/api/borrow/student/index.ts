@@ -67,9 +67,6 @@ export default makeHandler((prisma) => ({
       return;
     }
 
-    const borrowDate = new Date();
-    const returnDate = periodDates[body.borrowPeriod];
-
     const books = await prisma.buku.findMany({
       where: {
         id: { in: body.bookIds },
@@ -80,8 +77,7 @@ export default makeHandler((prisma) => ({
       data: {
         mahasiswaId: student.id,
         status: "Pengajuan",
-        tanggalPeminjaman: borrowDate,
-        tanggalKembali: returnDate,
+        periode: body.borrowPeriod,
       },
     });
 

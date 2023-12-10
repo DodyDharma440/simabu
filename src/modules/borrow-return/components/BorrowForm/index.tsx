@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback } from "react";
 import {
   Alert,
   Box,
@@ -11,13 +11,12 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { HiOutlineExclamationCircle, HiOutlineUpload } from "react-icons/hi";
-import { Controller, useFormContext, useWatch } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { useUserProfile } from "@/auth/hooks";
 import { IStudent } from "@/user/interfaces";
-import { periodDates, periodOptions } from "@/borrow-return/constants";
+import { periodOptions } from "@/borrow-return/constants";
 import { IBorrowInputUi } from "@/borrow-return/interfaces";
 import { useBorrowBook } from "@/borrow-return/actions";
 import SummaryBooks from "./SummaryBooks";
@@ -35,7 +34,6 @@ const BorrowForm = () => {
     handleSubmit,
     formState: { errors },
   } = useFormContext<IBorrowInputUi>();
-  const selectedPeriod = useWatch({ control, name: "borrowPeriod" });
 
   const { userData } = useUserProfile<IStudent>();
 
@@ -49,13 +47,6 @@ const BorrowForm = () => {
     },
     [createBorrow]
   );
-
-  const dateReturn = useMemo(() => {
-    if (selectedPeriod) {
-      return dayjs(periodDates[selectedPeriod]).format("DD MMMM YYYY");
-    }
-    return "";
-  }, [selectedPeriod]);
 
   return (
     <Box onSubmit={handleSubmit(submitHandler)} component="form" p="md">
@@ -97,12 +88,6 @@ const BorrowForm = () => {
                   />
                 );
               }}
-            />
-            <TextInput
-              label="Tanggal Pengembalian"
-              placeholder="Tanggal Pengembalian paling lambat..."
-              value={dateReturn}
-              readOnly
             />
           </Stack>
         </Card>

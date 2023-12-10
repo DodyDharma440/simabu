@@ -109,8 +109,9 @@ model Peminjaman {
   mahasiswaId       Int
   petugas           Petugas?           @relation(fields: [petugasId], references: [id])
   petugasId         Int?
-  tanggalPeminjaman DateTime
-  tanggalKembali    DateTime
+  periode           String
+  tanggalPeminjaman DateTime?
+  tanggalKembali    DateTime?
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @default(now())
   DetailPeminjaman  DetailPeminjaman[]
@@ -130,8 +131,8 @@ model DetailPeminjaman {
 model Pengembalian {
   id                  Int        @id @default(autoincrement())
   tanggalPengembalian DateTime
-  petugasPenerima     Petugas    @relation(fields: [petugasId], references: [id])
-  petugasId           Int
+  petugasPenerima     Petugas?   @relation(fields: [petugasId], references: [id])
+  petugasId           Int?
   denda               Float?
   createdAt           DateTime   @default(now())
   updatedAt           DateTime   @default(now())

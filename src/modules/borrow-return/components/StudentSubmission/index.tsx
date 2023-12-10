@@ -96,13 +96,28 @@ const StudentSubmission = () => {
             <Stack spacing="xs">
               <DetailGroup
                 label="Tanggal pengajuan"
-                value={dayjs(submission.tanggalPeminjaman).format(
-                  "DD MMMM YYYY"
-                )}
+                value={
+                  submission.createdAt
+                    ? dayjs(submission.createdAt).format("DD MMMM YYYY")
+                    : "-"
+                }
+              />
+              <DetailGroup label="Periode" value={submission.periode} />
+              <DetailGroup
+                label="Tanggal peminjaman"
+                value={
+                  submission.tanggalPeminjaman
+                    ? dayjs(submission.tanggalPeminjaman).format("DD MMMM YYYY")
+                    : "-"
+                }
               />
               <DetailGroup
                 label="Tanggal kembali"
-                value={dayjs(submission.tanggalKembali).format("DD MMMM YYYY")}
+                value={
+                  submission.tanggalKembali
+                    ? dayjs(submission.tanggalKembali).format("DD MMMM YYYY")
+                    : "-"
+                }
               />
               <DetailGroup
                 label="Nama petugas"
@@ -141,7 +156,7 @@ const StudentSubmission = () => {
                       ) : null}
                     </Box>
 
-                    <Stack spacing="0px" sx={{ flex: 1 }}>
+                    <Stack w="100%" spacing="0px" sx={{ flex: 1 }}>
                       <Badge w="fit-content" mb="4px">
                         {borrow.buku?.kategori?.nama}
                       </Badge>
