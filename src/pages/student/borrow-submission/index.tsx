@@ -1,9 +1,9 @@
 import React from "react";
-import Link from "next/link";
 import Head from "next/head";
-import { Button } from "@mantine/core";
+import { Box } from "@mantine/core";
 import { withAuth } from "@/common/hocs";
 import { MobileLayout } from "@/common/layouts";
+import { StudentSubmission } from "@/borrow-return/components";
 
 const BorrowedBooksPage = () => {
   return (
@@ -13,9 +13,9 @@ const BorrowedBooksPage = () => {
       </Head>
 
       <MobileLayout>
-        <Link href="/logout">
-          <Button>Logout</Button>
-        </Link>
+        <Box p="md">
+          <StudentSubmission />
+        </Box>
       </MobileLayout>
     </>
   );

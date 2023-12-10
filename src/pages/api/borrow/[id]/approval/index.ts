@@ -1,11 +1,14 @@
 import { IBorrowApprovalInput } from "@/borrow-return/interfaces";
 import { createErrResponse, createResponse } from "@/common/utils/api-response";
 import { makeHandler } from "@/common/utils/api-route";
+import { decodeToken } from "@/common/utils/auth";
 
 export default makeHandler((prisma) => ({
   PATCH: async (req, res) => {
     const id = Number(req.query["id"]);
     const body = req.body as IBorrowApprovalInput;
+
+    const userData = decodeToken(req);
 
     const borrow = await prisma.peminjaman.findUnique({ where: { id } });
 
@@ -24,6 +27,7 @@ export default makeHandler((prisma) => ({
       data: {
         status: body.status,
         updatedAt: new Date(),
+        petugasId: userData?.id,
       },
     });
 

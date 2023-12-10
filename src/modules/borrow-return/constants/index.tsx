@@ -5,6 +5,7 @@ import { Badge, Button, Group, Text } from "@mantine/core";
 
 export const IS_BORROWING = "is-borrowing";
 export const BORROWS = "borrows";
+export const CURRENT_SUBMISSION = "current-submission";
 
 export const periodDates: Record<BorrowPeriod, Date> = {
   "3 Hari": dayjs().add(3, "days").toDate(),
@@ -29,6 +30,12 @@ export const periodDayLabels: Record<string, BorrowPeriod> = {
 };
 
 export const periodOptions = Object.keys(periodDates);
+export const statusColors: Record<BorrowStatus, string> = {
+  Pengajuan: "yellow",
+  Diterima: "green",
+  Ditolak: "red",
+  Selesai: "blue",
+};
 
 type BorrowColArgs = {
   onApprove: (data: IBorrow, approval: "reject" | "approve") => void;
@@ -62,15 +69,12 @@ export const borrowsColumns = ({ onApprove, onDetail }: BorrowColArgs) =>
         justifyBody: "center",
         justifyHeader: "center",
         cell: ({ row }) => {
-          const colors: Record<BorrowStatus, string> = {
-            Pengajuan: "yellow",
-            Diterima: "green",
-            Ditolak: "red",
-            Selesai: "blue",
-          };
-
           return (
-            <Badge color={colors[row.original.status]} variant="dot" py="sm">
+            <Badge
+              color={statusColors[row.original.status]}
+              variant="dot"
+              py="sm"
+            >
               {row.original.status}
             </Badge>
           );

@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PaginationResponse } from "../interfaces/api";
 
-export const createResponse = <T extends Object>(
+export const createResponse = <T extends any>(
   res: NextApiResponse,
   data: T,
   status: number = 200

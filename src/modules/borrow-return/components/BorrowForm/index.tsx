@@ -19,14 +19,14 @@ import { useUserProfile } from "@/auth/hooks";
 import { IStudent } from "@/user/interfaces";
 import { periodDates, periodOptions } from "@/borrow-return/constants";
 import { IBorrowInputUi } from "@/borrow-return/interfaces";
-import SummaryBooks from "./SummaryBooks";
 import { useBorrowBook } from "@/borrow-return/actions";
+import SummaryBooks from "./SummaryBooks";
 
 const BorrowForm = () => {
   const { replace } = useRouter();
   const { mutate: createBorrow, isPending } = useBorrowBook({
     onSuccess: () => {
-      replace("/student/dashboard");
+      replace("/student/borrow-submission");
     },
   });
 
