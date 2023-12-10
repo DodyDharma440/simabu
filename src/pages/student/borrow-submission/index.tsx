@@ -5,11 +5,11 @@ import { Button } from "@mantine/core";
 import { withAuth } from "@/common/hocs";
 import { MobileLayout } from "@/common/layouts";
 
-const StudentDashboardPage = () => {
+const BorrowedBooksPage = () => {
   return (
     <>
       <Head>
-        <title>Dashboard | SIMABU</title>
+        <title>Buku Dipinjam | SIMABU</title>
       </Head>
 
       <MobileLayout>
@@ -21,4 +21,4 @@ const StudentDashboardPage = () => {
   );
 };
 
-export default withAuth(StudentDashboardPage, ["Mahasiswa"]);
+export default withAuth(BorrowedBooksPage, ["Mahasiswa"]);

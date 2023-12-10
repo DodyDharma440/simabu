@@ -76,7 +76,7 @@ export const booksCols = ({
 }: Omit<TableActionArgs<IBook>, "onEdit">) => {
   return createTableColumns<IBook>(({ accessor }) => [
     accessor("imageUrl", {
-      header: "Thumbnail",
+      header: "Cover",
       cell: ({ row }) => {
         return (
           <Box
@@ -104,6 +104,9 @@ export const booksCols = ({
     }),
     accessor("kodeBuku", {
       header: "Kode Buku",
+    }),
+    accessor("kategori.nama", {
+      header: "Kategori",
     }),
     accessor("tahunTerbit", {
       header: "Tahun Terbit",

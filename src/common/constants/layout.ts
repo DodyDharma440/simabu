@@ -44,3 +44,26 @@ export const adminMenus: ISidebarMenu[] = [
     roles: ["Admin", "Petugas"],
   },
 ];
+
+export const studentMenu: ISidebarMenu[] = [
+  {
+    label: "Dashboard",
+    path: "/student/dashboard",
+    roles: ["Mahasiswa"],
+  },
+  {
+    label: "Peminjaman Buku",
+    path: "/student/borrow-submission",
+    roles: ["Mahasiswa"],
+  },
+  {
+    label: "Riwayat Peminjaman",
+    path: "/student/history",
+    roles: ["Mahasiswa"],
+  },
+  {
+    label: "Logout",
+    path: "/logout",
+    roles: ["Mahasiswa"],
+  },
+];

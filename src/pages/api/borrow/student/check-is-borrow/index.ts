@@ -1,3 +1,4 @@
+import { checkIsBorrowing } from "@/borrow-return/utils";
 import { createErrResponse, createResponse } from "@/common/utils/api-response";
 import { makeHandler } from "@/common/utils/api-route";
 import { decodeToken } from "@/common/utils/auth";
@@ -14,21 +15,8 @@ export default makeHandler((prisma) => ({
       return;
     }
 
-    const borroweds = await prisma.peminjaman.findMany({
-      where: {
-        OR: [
-          { status: "Diterima" },
-          { status: "Ditolak" },
-          { status: "Pengajuan" },
-        ],
-        mahasiswaId: student.id,
-      },
-    });
+    const isBorrowing = await checkIsBorrowing(prisma, student.id);
 
-    const count = await prisma.pengembalian.count({
-      where: { AND: borroweds.map((b) => ({ peminjamanId: b.id })) },
-    });
-
-    return createResponse(res, count === 0);
+    return createResponse(res, isBorrowing);
   },
 }));

@@ -1,5 +1,6 @@
 import { periodDates } from "@/borrow-return/constants";
 import { IBorrowInput } from "@/borrow-return/interfaces";
+import { checkIsBorrowing } from "@/borrow-return/utils";
 import {
   createErrResponse,
   createResponse,
@@ -56,6 +57,13 @@ export default makeHandler((prisma) => ({
 
     if (!student) {
       createErrResponse(res, "Student not found", 404);
+      return;
+    }
+
+    const isBorrowing = await checkIsBorrowing(prisma, student.id);
+
+    if (isBorrowing) {
+      createErrResponse(res, "Saat ini masih ada pengajuan", 400);
       return;
     }
 

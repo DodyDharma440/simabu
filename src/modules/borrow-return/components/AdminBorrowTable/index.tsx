@@ -1,12 +1,32 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { Box, Select } from "@mantine/core";
-import { DataTable } from "@/common/components";
-import { useDataTableLifecycle, useServerDataTable } from "@/common/hooks";
-import { useGetBorrowSubmissions } from "@/borrow-return/actions";
+import { AlertDialog, DataTable } from "@/common/components";
+import {
+  useDataTableLifecycle,
+  useDisclosureData,
+  useServerDataTable,
+} from "@/common/hooks";
+import {
+  useBorrowApproval,
+  useGetBorrowSubmissions,
+} from "@/borrow-return/actions";
 import { borrowsColumns, statusOptions } from "@/borrow-return/constants";
+import { IBorrow } from "@/borrow-return/interfaces";
 
 const AdminBorrowTable = () => {
   const [status, setStatus] = useState(statusOptions[0]);
+
+  const [
+    isOpenApprove,
+    { open: openApprove, close: closeApprove },
+    approveData,
+  ] = useDisclosureData<IBorrow & { mode: "approve" | "reject" }>();
+  const [isOpenDetail, { open: openDetail, close: closeDetail }, detailData] =
+    useDisclosureData<IBorrow>();
+
+  const { mutate: approval, isPending: isLoadingApprove } = useBorrowApproval({
+    onSuccess: () => closeApprove(),
+  });
 
   const {
     paginationProps,
@@ -28,10 +48,21 @@ const AdminBorrowTable = () => {
 
   const tableColumns = useMemo(() => {
     return borrowsColumns({
-      onApprove: () => {},
-      onDetail: () => {},
+      onApprove: (data, mode) => openApprove({ ...data, mode }),
+      onDetail: (data) => openDetail(data),
     });
-  }, []);
+  }, [openApprove, openDetail]);
+
+  const handleApprove = useCallback(() => {
+    if (approveData) {
+      approval({
+        formValues: {
+          status: approveData.mode === "approve" ? "Diterima" : "Ditolak",
+        },
+        id: approveData.id,
+      });
+    }
+  }, [approval, approveData]);
 
   useDataTableLifecycle({
     refetcher: refetch,
@@ -68,6 +99,22 @@ const AdminBorrowTable = () => {
           error={error}
         />
       </DataTable.Container>
+
+      <AlertDialog
+        isOpen={isOpenApprove}
+        onClose={closeApprove}
+        title="Approval Pengajuan"
+        message={`Apakah Anda yakin untuk ${
+          approveData?.mode === "approve" ? "menyetujui" : "menolak"
+        } pengajuan ini?`}
+        cancelButtonText="Batal"
+        confirmButtonText={
+          approveData?.mode === "approve" ? "Setujui" : "Tolak"
+        }
+        onCancel={closeApprove}
+        onConfirm={handleApprove}
+        confirmButtonProps={{ loading: isLoadingApprove }}
+      />
     </Box>
   );
 };

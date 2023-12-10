@@ -3,19 +3,22 @@ import Link from "next/link";
 import Head from "next/head";
 import { Button } from "@mantine/core";
 import { withAuth } from "@/common/hocs";
+import { MobileLayout } from "@/common/layouts";
 
-const BorrowedBooksPage = () => {
+const HistoryPage = () => {
   return (
     <>
       <Head>
         <title>Buku Dipinjam | SIMABU</title>
       </Head>
 
-      <Link href="/logout">
-        <Button>Logout</Button>
-      </Link>
+      <MobileLayout>
+        <Link href="/logout">
+          <Button>Logout</Button>
+        </Link>
+      </MobileLayout>
     </>
   );
 };
 
-export default withAuth(BorrowedBooksPage, ["Mahasiswa"]);
+export default withAuth(HistoryPage, "Mahasiswa");

@@ -1,5 +1,5 @@
-import { get, post } from "@/common/utils/react-query";
-import { IBorrow, IBorrowInput } from "../interfaces";
+import { get, patch, post } from "@/common/utils/react-query";
+import { IBorrow, IBorrowApprovalInput, IBorrowInput } from "../interfaces";
 import { apiSimabu } from "@/common/configs/api";
 import { BORROWS, IS_BORROWING } from "../constants";
 import { PaginationResponse } from "@/common/interfaces/api";
@@ -19,4 +19,10 @@ export const useGetBorrowSubmissions = get<PaginationResponse<IBorrow>>(
   (args, ctx) =>
     apiSimabu.get(`/borrow${args?.urlParams || ""}`, { signal: ctx?.signal }),
   [BORROWS]
+);
+
+export const useBorrowApproval = patch<any, IBorrowApprovalInput>(
+  ({ formValues, id }) => apiSimabu.patch(`/borrow/${id}/approval`, formValues),
+  [BORROWS],
+  { successMessage: "Pengajuan peminjaman berhasil diperbarui" }
 );

@@ -31,7 +31,7 @@ export const periodDayLabels: Record<string, BorrowPeriod> = {
 export const periodOptions = Object.keys(periodDates);
 
 type BorrowColArgs = {
-  onApprove: (data: IBorrow, approval: "reject" | "accept") => void;
+  onApprove: (data: IBorrow, approval: "reject" | "approve") => void;
   onDetail: (data: IBorrow) => void;
 };
 
@@ -104,7 +104,7 @@ export const borrowsColumns = ({ onApprove, onDetail }: BorrowColArgs) =>
                   <Button
                     compact
                     color="green"
-                    onClick={() => onApprove(row.original, "accept")}
+                    onClick={() => onApprove(row.original, "approve")}
                   >
                     Setujui
                   </Button>
