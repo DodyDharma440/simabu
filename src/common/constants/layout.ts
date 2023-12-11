@@ -47,11 +47,6 @@ export const adminMenus: ISidebarMenu[] = [
 
 export const studentMenu: ISidebarMenu[] = [
   {
-    label: "Dashboard",
-    path: "/student/dashboard",
-    roles: ["Mahasiswa"],
-  },
-  {
     label: "Peminjaman Buku",
     path: "/student/borrow-submission",
     roles: ["Mahasiswa"],

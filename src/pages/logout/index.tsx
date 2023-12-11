@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import Cookies from "cookies";
@@ -6,12 +6,18 @@ import dayjs from "dayjs";
 import { Loader } from "@/common/components";
 
 const LogoutPage = () => {
-  const { replace } = useRouter();
+  const [isRemoved, setIsRemoved] = useState(false);
 
   useEffect(() => {
-    replace("/login");
     localStorage.removeItem("isLoggedIn");
-  }, [replace]);
+    setIsRemoved(true);
+  }, []);
+
+  useEffect(() => {
+    if (isRemoved) {
+      window.location.replace("/login");
+    }
+  }, [isRemoved]);
 
   return (
     <Loader isLoading placeholderHeight="100vh">

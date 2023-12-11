@@ -1,6 +1,7 @@
 import { get, patch, post } from "@/common/utils/react-query";
 import {
   IBookReturn,
+  IBookReturnConfirmInput,
   IBookReturnInput,
   IBorrow,
   IBorrowApprovalInput,
@@ -55,4 +56,11 @@ export const useGetBookReturns = get<PaginationResponse<IBookReturn>>(
       signal: ctx?.signal,
     }),
   [BOOK_RETURNS]
+);
+
+export const useConfirmBookReturn = patch<IBookReturn, IBookReturnConfirmInput>(
+  ({ formValues, id }) =>
+    apiSimabu.patch(`/book-return/${id}/confirm`, formValues),
+  [BOOK_RETURNS],
+  { successMessage: "Konfirmasi pengembalian berhasil" }
 );

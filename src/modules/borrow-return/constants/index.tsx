@@ -174,9 +174,17 @@ export const bookReturnsColumns = ({ onConfirm }: BookReturnColArgs) =>
       justifyBody: "center",
       cell: ({ row }) => {
         return (
-          <Button compact color="green" onClick={() => onConfirm(row.original)}>
-            Konfirmasi
-          </Button>
+          <>
+            {!row.original.isApproved ? (
+              <Button
+                compact
+                color="green"
+                onClick={() => onConfirm(row.original)}
+              >
+                Konfirmasi
+              </Button>
+            ) : null}
+          </>
         );
       },
     },

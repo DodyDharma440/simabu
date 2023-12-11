@@ -25,7 +25,7 @@ const LoginForm = () => {
       const urls: Record<string, string> = {
         Admin: "/admin/dashboard",
         Petugas: "/admin/dashboard",
-        Mahasiswa: "/student/dashboard",
+        Mahasiswa: "/student/borrow-submission",
       };
       localStorage.setItem("isLoggedIn", "true");
 

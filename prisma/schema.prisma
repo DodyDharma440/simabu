@@ -112,6 +112,7 @@ model Peminjaman {
   periode           String
   tanggalPeminjaman DateTime?
   tanggalKembali    DateTime?
+  flagHistory       Boolean?           @default(false)
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @default(now())
   DetailPeminjaman  DetailPeminjaman[]

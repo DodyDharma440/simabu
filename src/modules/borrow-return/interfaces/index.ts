@@ -33,6 +33,7 @@ export interface IBorrow extends BasicData {
   periode: string;
   tanggalKembali: string | null;
   isBookReturnSubmission: boolean;
+  flagHistory?: boolean | null;
   DetailPeminjaman: IBorrowDetail[];
   Pengembalian?: IBookReturn;
 }

@@ -9,6 +9,7 @@ import { DataTable } from "@/common/components";
 import { Box } from "@mantine/core";
 import { IBookReturn } from "@/borrow-return/interfaces";
 import { bookReturnsColumns } from "@/borrow-return/constants";
+import ReturnConfirmation from "../ReturnConfirmation";
 
 const AdminReturnTable = () => {
   const {
@@ -60,6 +61,12 @@ const AdminReturnTable = () => {
           error={error}
         />
       </DataTable.Container>
+
+      <ReturnConfirmation
+        isOpen={isOpenConfirm}
+        onClose={closeConfirm}
+        bookReturn={confirmData}
+      />
     </Box>
   );
 };

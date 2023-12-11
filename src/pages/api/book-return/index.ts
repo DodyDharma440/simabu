@@ -36,7 +36,15 @@ export default makeHandler((prisma) => ({
                   select: {
                     id: true,
                     judul: true,
+                    penerbit: true,
+                    jumlahHalaman: true,
+                    penulis: true,
                     imageUrl: true,
+                    kategori: {
+                      select: {
+                        nama: true,
+                      },
+                    },
                   },
                 },
               },

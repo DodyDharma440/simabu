@@ -26,7 +26,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     return {
       redirect: {
         destination:
-          role === "Mahasiswa" ? "/student/dashboard" : "/admin/dashboard",
+          role === "Mahasiswa"
+            ? "/student/borrow-submission"
+            : "/admin/dashboard",
         permanent: false,
       },
     };

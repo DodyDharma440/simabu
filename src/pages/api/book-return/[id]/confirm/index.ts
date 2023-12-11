@@ -1,5 +1,5 @@
 import { IBookReturnConfirmInput } from "@/borrow-return/interfaces";
-import { createErrResponse } from "@/common/utils/api-response";
+import { createErrResponse, createResponse } from "@/common/utils/api-response";
 import { makeHandler } from "@/common/utils/api-route";
 import { decodeToken } from "@/common/utils/auth";
 
@@ -30,6 +30,13 @@ export default makeHandler((prisma) => ({
       },
     });
 
+    await prisma.peminjaman.update({
+      where: { id: borrow.id },
+      data: {
+        status: "Selesai",
+      },
+    });
+
     const books = await prisma.buku.findMany({
       where: {
         id: { in: borrow.DetailPeminjaman.map((d) => d.bukuId) },
@@ -49,5 +56,7 @@ export default makeHandler((prisma) => ({
         });
       })
     );
+
+    return createResponse(res, result);
   },
 }));

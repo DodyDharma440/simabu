@@ -1,4 +1,3 @@
-import { periodDates } from "@/borrow-return/constants";
 import { IBorrowInput } from "@/borrow-return/interfaces";
 import { checkIsBorrowing } from "@/borrow-return/utils";
 import {
@@ -67,6 +66,15 @@ export default makeHandler((prisma) => ({
       return;
     }
 
+    const latestSubmission = await prisma.peminjaman.findFirst({
+      orderBy: {
+        createdAt: "desc",
+      },
+      where: {
+        mahasiswaId: student.id,
+      },
+    });
+
     const books = await prisma.buku.findMany({
       where: {
         id: { in: body.bookIds },
@@ -80,6 +88,16 @@ export default makeHandler((prisma) => ({
         periode: body.borrowPeriod,
       },
     });
+
+    if (latestSubmission) {
+      await prisma.peminjaman.update({
+        where: { id: latestSubmission.id },
+        data: {
+          flagHistory: true,
+          updatedAt: new Date(),
+        },
+      });
+    }
 
     const details = books.map((book) => ({
       bukuId: book.id,

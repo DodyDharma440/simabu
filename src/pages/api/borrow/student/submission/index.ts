@@ -32,6 +32,7 @@ export default makeHandler((prisma) => ({
       },
       where: {
         mahasiswaId: student.id,
+        flagHistory: false,
         OR: [
           { status: "Diterima" },
           { status: "Ditolak" },
@@ -41,7 +42,7 @@ export default makeHandler((prisma) => ({
     });
 
     const bookSubmission = await prisma.pengembalian.findUnique({
-      where: { peminjamanId: submission?.id || 0 },
+      where: { peminjamanId: submission?.id || 0, petugasId: null },
     });
 
     return createResponse(
