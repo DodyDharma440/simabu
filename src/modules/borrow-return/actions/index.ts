@@ -13,6 +13,7 @@ import {
   BORROWS,
   CURRENT_SUBMISSION,
   IS_BORROWING,
+  STUDENT_HISTORY,
 } from "../constants";
 import { PaginationResponse } from "@/common/interfaces/api";
 
@@ -63,4 +64,12 @@ export const useConfirmBookReturn = patch<IBookReturn, IBookReturnConfirmInput>(
     apiSimabu.patch(`/book-return/${id}/confirm`, formValues),
   [BOOK_RETURNS],
   { successMessage: "Konfirmasi pengembalian berhasil" }
+);
+
+export const useGetStudentHistory = get<IBorrow[]>(
+  (args, ctx) =>
+    apiSimabu.get(`/borrow/student${args?.urlParams || ""}`, {
+      signal: ctx?.signal,
+    }),
+  [STUDENT_HISTORY]
 );

@@ -1,9 +1,9 @@
 import React from "react";
-import Link from "next/link";
 import Head from "next/head";
-import { Button } from "@mantine/core";
 import { withAuth } from "@/common/hocs";
 import { MobileLayout } from "@/common/layouts";
+import { StudentHistory } from "@/borrow-return/components";
+import { Box } from "@mantine/core";
 
 const HistoryPage = () => {
   return (
@@ -13,9 +13,9 @@ const HistoryPage = () => {
       </Head>
 
       <MobileLayout>
-        <Link href="/logout">
-          <Button>Logout</Button>
-        </Link>
+        <Box p="md">
+          <StudentHistory />
+        </Box>
       </MobileLayout>
     </>
   );

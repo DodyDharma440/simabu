@@ -13,6 +13,7 @@ export const IS_BORROWING = "is-borrowing";
 export const BORROWS = "borrows";
 export const CURRENT_SUBMISSION = "current-submission";
 export const BOOK_RETURNS = "book-returns";
+export const STUDENT_HISTORY = "student-history";
 
 export const periodDates: Record<BorrowPeriod, Date> = {
   "3 Hari": dayjs().add(3, "days").toDate(),

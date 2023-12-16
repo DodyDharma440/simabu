@@ -31,7 +31,7 @@ type DetailGroupProps = {
   value: React.ReactNode;
 };
 
-const DetailGroup: React.FC<DetailGroupProps> = ({ label, value }) => {
+export const DetailGroup: React.FC<DetailGroupProps> = ({ label, value }) => {
   return (
     <Group align="flex-start" position="apart" noWrap>
       <Text size="sm">{label}</Text>

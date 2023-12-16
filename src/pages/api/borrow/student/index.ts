@@ -24,13 +24,17 @@ export default makeHandler((prisma) => ({
     }
 
     (searchParams as any).where.mahasiswaId = userData?.id;
-
-    const count = await prisma.peminjaman.count(searchParams);
+    (searchParams as any).where.flagHistory = true;
 
     const results = await prisma.peminjaman.findMany({
-      ...parseParams(req, "pagination"),
+      orderBy: {
+        Pengembalian: {
+          tanggalPengembalian: "desc",
+        },
+      },
       ...searchParams,
       include: {
+        Pengembalian: true,
         DetailPeminjaman: {
           include: {
             buku: {
@@ -38,6 +42,7 @@ export default makeHandler((prisma) => ({
                 id: true,
                 judul: true,
                 imageUrl: true,
+                kategori: true,
               },
             },
           },
@@ -45,7 +50,7 @@ export default makeHandler((prisma) => ({
       },
     });
 
-    createResponse(res, paginationResponse(results, count));
+    createResponse(res, results);
   },
   POST: async (req, res) => {
     const body = req.body as IBorrowInput;
