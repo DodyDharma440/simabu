@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { Box, Select } from "@mantine/core";
+import { Box, Button, Group, Select } from "@mantine/core";
 import { AlertDialog, DataTable } from "@/common/components";
 import {
   useDataTableLifecycle,
@@ -12,6 +12,10 @@ import {
 } from "@/borrow-return/actions";
 import { borrowsColumns, statusOptions } from "@/borrow-return/constants";
 import { IBorrow } from "@/borrow-return/interfaces";
+import { utils, writeFileXLSX } from "xlsx";
+import dayjs from "dayjs";
+import { showNotification } from "@mantine/notifications";
+import { getErrorMessage } from "@/common/utils/react-query";
 
 const AdminBorrowTable = () => {
   const [status, setStatus] = useState(statusOptions[0]);
@@ -42,6 +46,16 @@ const AdminBorrowTable = () => {
       }`,
     });
 
+  const {
+    isLoading: isLoadingExcel,
+    isRefetching: isRefetchingExcel,
+    error: errorExcel,
+    refetch: refetchExcel,
+  } = useGetBorrowSubmissions(
+    { urlParams: `?${status === "Semua status" ? "" : `&status=${status}`}` },
+    { enabled: false, uniqueKey: ["export-excel"] }
+  );
+
   const borrowsData = useMemo(() => {
     return data?.data.data.nodes || [];
   }, [data?.data.data.nodes]);
@@ -64,6 +78,55 @@ const AdminBorrowTable = () => {
     }
   }, [approval, approveData]);
 
+  const handleExportExcel = useCallback(async () => {
+    try {
+      const { data } = await refetchExcel();
+
+      const formatDate = (date?: string) => {
+        return date ? dayjs(date).locale("id").format("DD MMMM YYYY") : "-";
+      };
+
+      const dataWorkSheet = data?.data.data.nodes?.map((item) => {
+        return {
+          nama: item?.mahasiswa?.nama || "",
+          nim: item?.mahasiswa?.nim || "",
+          tanggal_pengajuan: formatDate(item.createdAt || "") || "",
+          periode: item.periode,
+          status: item.status || "",
+          jumlah_buku: item.DetailPeminjaman.length || 0,
+        };
+      });
+
+      const worksheet = utils.json_to_sheet(dataWorkSheet || []);
+      const workbook = utils.book_new();
+
+      utils.book_append_sheet(workbook, worksheet, "Laporan Mahasiswa Aktif");
+      utils.sheet_add_aoa(
+        worksheet,
+        [
+          [
+            "Nama",
+            "NIM",
+            "Tanggal Pengajuan",
+            "Periode Peminjaman",
+            "Status",
+            "Jumlah Buku",
+          ],
+        ],
+        { origin: "A1" }
+      );
+
+      writeFileXLSX(workbook, `Laporan-Peminjaman.xlsx`);
+    } catch (error) {
+      showNotification({
+        title: "Error",
+        message: getErrorMessage(error as any),
+        autoClose: 5000,
+        color: "red",
+      });
+    }
+  }, [refetchExcel]);
+
   useDataTableLifecycle({
     refetcher: refetch,
     total: data?.data.data.totalCount,
@@ -76,15 +139,20 @@ const AdminBorrowTable = () => {
 
   return (
     <Box py="md">
-      <Select
-        value={status}
-        onChange={(val) => setStatus(val || statusOptions[0])}
-        label="Status"
-        placeholder="Pilih Status"
-        data={statusOptions}
-        sx={{ width: "fit-content" }}
-        mb="md"
-      />
+      <Group w="100%" align="flex-end" mb="md" position="apart">
+        <Select
+          value={status}
+          onChange={(val) => setStatus(val || statusOptions[0])}
+          label="Status"
+          placeholder="Pilih Status"
+          data={statusOptions}
+          sx={{ width: "fit-content" }}
+        />
+        <Button onClick={handleExportExcel} loading={isRefetchingExcel}>
+          Export Laporan
+        </Button>
+      </Group>
+
       <DataTable.Wrapper content="search-perpage">
         <DataTable.PerPage {...perPageProps} />
         <DataTable.Search {...searchProps} />
